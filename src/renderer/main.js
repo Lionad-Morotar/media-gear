@@ -1,15 +1,18 @@
+/** 库引入 */
 import Vue from 'vue'
 import axios from 'axios'
-
-import App from './App'
 import router from './router'
 import store from './store'
 import db from './dataStore'
 import Element from 'element-ui'
 
+/** 项目工具引入 */
+import App from './App'
 import * as filters from './filters'
 import request from '@/utils/request'
+import './errorLog'
 
+/** 样式引入 */
 import './css/normalize.css'
 import 'element-ui/lib/theme-chalk/index.css'
 
