@@ -12,7 +12,8 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: '/'
+      name: '404 Not Found',
+      component: require('@/pages/errorPages/404').default
     }
   ]
 })
