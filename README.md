@@ -1,28 +1,33 @@
-# my-project
+# 需求记录
 
-> An electron-vue project
+## DO
 
-#### Build Setup
+### 搜索框
 
-``` bash
-# install dependencies
-npm install
+[] 全局的搜索框组件, 用于搜索本地资源等功能
+  [] 组件样式
+  [] 快捷键调出
+  [] 搜索文章列表
+  [] 搜索功能组件
+  [] 星标功能
+  [] 历史记录(排序)
 
-# serve with hot reload at localhost:9080
-npm run dev
+## UNDONE
 
-# build electron application for production
-npm run build
+### 写作系统搭建
 
-# run unit & end-to-end tests
-npm test
+## CODE TODO
 
+* 404页面完成时的测试用例
 
-# lint all JS/Vue component files in `src/`
-npm run lint
+## FEATURE TODO
 
-```
+* 用于同步Teambition未完成项目到<需求记录.md>的脚本
 
----
+## DONE
 
-This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[8fae476](https://github.com/SimulatedGREG/electron-vue/tree/8fae4763e9d225d3691b627e83b9e09b56f6c935) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
+### layout
+
+[x] layout组件, 用于页面结构构建
+  [x] 导航栏
+  [x] AppMain
