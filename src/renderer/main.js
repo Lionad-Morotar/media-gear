@@ -1,20 +1,20 @@
 /** 库引入 */
 import Vue from 'vue'
 import axios from 'axios'
-import router from './router'
-import store from './store'
 import db from './dataStore'
-import Element from 'element-ui'
+// import Element from 'element-ui'
 
 /** 项目工具引入 */
 import App from './App'
+import router from './router'
+import store from './store'
 import * as filters from './filters'
 import request from '@/utils/request'
 import './errorLog'
+import './pageLoadInjector'
 
 /** 样式引入 */
 import './css/normalize.css'
-import 'element-ui/lib/theme-chalk/index.css'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -22,7 +22,7 @@ Vue.config.productionTip = false
 
 // mockjs : simulation data for development
 if (process.env.NODE_ENV === 'development') {
-  require('./mock/index')
+  require('./mock')
 }
 
 // 注册过滤器
@@ -38,7 +38,7 @@ Vue.prototype.$request = request
 Vue.prototype.$db = db
 
 // Element UI
-Vue.use(Element)
+// Vue.use(Element)
 
 // eslint-disable no-new
 new Vue({
