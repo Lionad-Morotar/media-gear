@@ -1,19 +1,35 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import Layout from '@/pages/layout/Layout'
+
 Vue.use(Router)
 
+const routes = [
+  {
+    path: '/404',
+    name: '404 Not Found',
+    components: () => import('@/pages/errorPages/404')
+  },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'homepage',
+    children: [
+      {
+        path: 'homepage',
+        name: '首页',
+        component: () => import('@/pages/home')
+      }
+    ]
+  },
+  {
+    path: '*',
+    redirect: ''
+  }
+]
+
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: '首页',
-      component: require('@/pages/home').default
-    },
-    {
-      path: '*',
-      name: '404 Not Found',
-      component: require('@/pages/errorPages/404').default
-    }
-  ]
+  scrollBehavior: () => ({ x: 0, y: 0 }),
+  routes
 })
