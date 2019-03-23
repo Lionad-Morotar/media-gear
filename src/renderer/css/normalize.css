@@ -1,5 +1,9 @@
 /*! normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
 
+/** Changing
+ * 1. remove 'font-family'
+ */
+
 /**
  * 1. Change the default font family in all browsers (opinionated).
  * 2. Correct the line height in all browsers.
@@ -11,7 +15,6 @@
    ========================================================================== */
 
 html {
-  font-family: sans-serif; /* 1 */
   line-height: 1.15; /* 2 */
   -ms-text-size-adjust: 100%; /* 3 */
   -webkit-text-size-adjust: 100%; /* 3 */
@@ -90,7 +93,6 @@ hr {
  */
 
 pre {
-  font-family: monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -154,7 +156,6 @@ strong {
 code,
 kbd,
 samp {
-  font-family: monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -254,7 +255,6 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: sans-serif; /* 1 */
   font-size: 100%; /* 1 */
   line-height: 1.15; /* 1 */
   margin: 0; /* 2 */

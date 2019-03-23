@@ -5,6 +5,19 @@
 @import './atom-css/font.scss';
 @import './atom-css/functional.scss';
 
+/** font */
+@import url('../fonts/index.scss');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: '微软雅黑';
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+
+
 /** ICONFONT */
 // TODO ICONFONT
 // @font-face {
