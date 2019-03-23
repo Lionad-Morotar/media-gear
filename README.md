@@ -1,6 +1,6 @@
 # 需求记录
 
-## DO
+## SHECDULE
 
 ### 搜索框
 
@@ -25,9 +25,3 @@
 * 用于同步Teambition未完成项目到<需求记录.md>的脚本
 
 ## DONE
-
-### layout
-
-[x] layout组件, 用于页面结构构建
-  [x] 导航栏
-  [x] AppMain
