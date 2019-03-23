@@ -5,7 +5,7 @@
     <router-view />
 
     <!-- externals -->
-    <helper :visible="visible.helper" />
+    <helper />
 
   </div>
 </template>
@@ -27,10 +27,12 @@ export default {
 
   data () {
     return {
-      visible: {
-        // 将 Helper 的状态转移至 store 中维护
-        helper: false
-      }
+      // ...
+    }
+  },
+  computed: {
+    active () {
+      return this.$store.getters.helperActive
     }
   },
 
@@ -47,16 +49,24 @@ export default {
       {
         key: 'F1',
         handler: () => {
-          this.visible.helper = !this.visible.helper
+          this.$store.dispatch('toggleHelperActive')
         }
       },
       {
         key: 'Escape',
         handler: () => {
-          this.visible.helper = false
+          this.$store.dispatch('inActiveHelper')
         }
       }
     ])
+  },
+
+  methods: {
+
+    closeHelper () {
+      this.visible.helper = false
+    }
+
   }
 }
 </script>
@@ -64,11 +74,5 @@ export default {
 <style lang="scss">
 #app {
   display: block;
-}
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .15s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
 }
 </style>

@@ -1,17 +1,23 @@
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { createPersistedState, createSharedMutations } from 'vuex-electron'
+import { createPersistedState } from 'vuex-electron'
 
 import modules from './modules'
+import getters from './getters'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const MGearStore = new Vuex.Store({
   modules,
+  getters,
   plugins: [
-    createPersistedState(),
-    createSharedMutations()
+    createPersistedState()
+    // ! disable to fix issue: https://github.com/SimulatedGREG/electron-vue/issues/794
+    // createSharedMutations()
   ],
   strict: process.env.NODE_ENV !== 'production'
 })
+
+export default MGearStore
