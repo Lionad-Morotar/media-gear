@@ -1,6 +1,7 @@
 const getters = {
 
-  helperActive: state => state.helper.active
+  helperActive: state => state.helper.active,
+  helperSearchContent: state => state.helper.search
 
 }
 

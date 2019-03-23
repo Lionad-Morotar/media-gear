@@ -1,5 +1,6 @@
 const state = {
-  active: false
+  active: false,
+  search: ''
 }
 
 const mutations = {
@@ -12,8 +13,14 @@ const mutations = {
   INACTIVE_HELPER (state) {
     state.active = false
   },
-  TOGGLE_HELPER_ACTIVE (state) {
-    state.active = !state.active
+
+  /** search */
+
+  CLEAR_SEARCH (state) {
+    state.search = ''
+  },
+  SET_SEARCH (state, value) {
+    state.search = value
   }
 
 }
@@ -31,13 +38,32 @@ const actions = {
   inActiveHelper ({ commit }) {
     return new Promise((resolve) => {
       commit('INACTIVE_HELPER')
-      resolve()
+      setTimeout(() => {
+        commit('CLEAR_SEARCH')
+        resolve()
+      }, 300)
     })
   },
-  toggleHelperActive ({ commit }) {
+  toggleHelperActive ({ state, dispatch }) {
     return new Promise((resolve) => {
-      commit('TOGGLE_HELPER_ACTIVE')
-      resolve()
+      Promise.all([
+        state.active
+          ? dispatch('inActiveHelper')
+          : dispatch('activeHelper')
+      ]).then(resolve)
+    })
+  },
+
+  /** search */
+
+  changeSearchContent ({ commit }, { val }) {
+    return new Promise((resolve, reject) => {
+      if (typeof val === 'string') {
+        commit('SET_SEARCH', val)
+        resolve()
+      } else {
+        reject(new Error('@store/actions/changeSearchContent 值类型不是字符串'))
+      }
     })
   }
 

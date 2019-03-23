@@ -4,7 +4,7 @@
       id="helper-cmpt"
       class="fcc"
       v-show="active"
-      @click="closeHelper"
+      @click="$store.dispatch('inActiveHelper')"
     >
 
       <input
@@ -22,35 +22,26 @@
 
 export default {
   name: 'helper-cmpt',
-  data () {
-    return {
-      search: ''
-    }
-  },
   computed: {
     active () {
-      return this.$store.getters.helperActive
-    }
-  },
-  watch: {
-    /** Input 自动聚焦
-     * 节点开启关闭时, autofocus 属性不生效
-     * 这里使用DOM函数Focus达到自动聚焦的功能
-     */
-    active (n, o) {
-      if (n) {
-        this.$nextTick(() => {
-          this.$refs['helper-input'].focus()
-        })
+      const val = this.$store.getters.helperActive
+      /** Input 自动聚焦
+       * 节点开启关闭时, autofocus 属性不生效
+       * 这里使用DOM函数Focus达到自动聚焦的功能
+       */
+      val && this.$nextTick(() => {
+        this.$refs['helper-input'].focus()
+      })
+      return val
+    },
+    search: {
+      get () {
+        return this.$store.getters.helperSearchContent
+      },
+      set (val) {
+        this.$store.dispatch('changeSearchContent', { val })
       }
     }
-  },
-  methods: {
-
-    closeHelper () {
-      this.$store.dispatch('inActiveHelper')
-    }
-
   }
 }
 </script>

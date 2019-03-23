@@ -14,12 +14,12 @@
 
 import { KeyboardListener } from './mixins/KeyboardListener.mixins.js'
 
-import Helper from './views/Helper'
+import helper from './views/helper'
 
 export default {
   name: 'mgear-project',
   components: {
-    Helper
+    helper
   },
   mixins: [
     KeyboardListener
