@@ -1,5 +1,7 @@
 'use strict'
 
+/* eslint-disable */
+
 import { app, BrowserWindow } from 'electron'
 
 /**

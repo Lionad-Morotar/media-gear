@@ -1,8 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
 
-import { Message } from 'element-ui'
-
 // create an axios instance
 const service = axios.create({
   method: 'POST',
@@ -32,10 +30,6 @@ service.interceptors.response.use(
     const { code, msg, data } = resContent
     switch (code) {
       case -2:
-        Message.error({
-          message: msg,
-          time: 5 * 1000
-        })
         return Promise.reject(msg)
     }
 

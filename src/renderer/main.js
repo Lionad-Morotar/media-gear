@@ -2,7 +2,6 @@
 import Vue from 'vue'
 import axios from 'axios'
 import db from './dataStore'
-// import Element from 'element-ui'
 
 /** 项目工具引入 */
 import App from './App'
