@@ -1,11 +1,6 @@
 <template>
   <div id="app">
 
-    <div id="electron-titlebar" class="inset" style="z-index: 1; ">
-      <div class="drag" id="drag-left"></div>
-      <div class="drag" id="drag-right"></div>
-    </div>
-
     <!-- app -->
     <router-view />
 
