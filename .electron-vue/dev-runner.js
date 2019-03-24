@@ -1,7 +1,5 @@
 'use strict'
 
-process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
-
 const chalk = require('chalk')
 const electron = require('electron')
 const path = require('path')
@@ -129,7 +127,7 @@ function startElectron () {
   }
 
   electronProcess = spawn(electron, args)
-  
+
   electronProcess.stdout.on('data', data => {
     electronLog(data, 'blue')
   })

@@ -35,13 +35,13 @@ module.exports = config => {
     client: {
       useIframe: false
     },
-    coverageReporter: {
-      dir: './coverage',
-      reporters: [
-        { type: 'lcov', subdir: '.' },
-        { type: 'text-summary' }
-      ]
-    },
+    // coverageReporter: {
+    //   dir: './coverage',
+    //   reporters: [
+    //     { type: 'lcov', subdir: '.' },
+    //     { type: 'text-summary' }
+    //   ]
+    // },
     customLaunchers: {
       'visibleElectron': {
         base: 'Electron',
@@ -53,7 +53,8 @@ module.exports = config => {
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']
     },
-    reporters: ['spec', 'coverage'],
+    // reporters: ['spec', 'coverage'],
+    reporters: ['spec'],
     singleRun: true,
     webpack: webpackConfig,
     webpackMiddleware: {

@@ -1,6 +1,7 @@
 'use strict'
 
 process.env.NODE_ENV = 'production'
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
 
 const { say } = require('cfonts')
 const chalk = require('chalk')
