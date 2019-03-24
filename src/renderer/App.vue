@@ -41,10 +41,7 @@ export default {
       type: [
         'intercept-all',
         'set-vector'
-      ],
-      store: {
-        eventHub: this.$root.eventHub
-      }
+      ]
     }, [
       {
         key: 'F1',

@@ -76,10 +76,6 @@ export const KeyboardListener = {
       if (this.canSetVector) {
         pushIn()
       }
-      if (this.confStore.store) {
-        this.confStore.store.eventHub &&
-                  this.confStore.store.eventHub.$emit('KeyBoardListener::vector', this.keyboardVector)
-      }
 
       // check trigger
       if (this.$_checkKeyIsTrigger(e.key)) {
@@ -89,9 +85,9 @@ export const KeyboardListener = {
         if (this.handlerStore[combined]) {
           // e.preventDefault()
           this.handlerStore[combined]()
-          this.$root.eventHub &&
-            this.$root.eventHub.$emit &&
-            this.$root.eventHub.$emit(`${this.pagePrefix || 'KeyBoardListener::'}${e.key}`)
+          const eventHub = this.confStore.store || this.$root.eventHub
+          eventHub &&
+            eventHub.$emit(`${this.pagePrefix || 'KeyBoardListener::'}${e.key}`)
         }
       }
     },
