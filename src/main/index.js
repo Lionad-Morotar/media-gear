@@ -2,60 +2,19 @@
 
 /* eslint-disable */
 
-import { app, BrowserWindow } from 'electron'
+import { app } from 'electron'
+import MGearApplication from '../app/mgear-app'
 
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path')
-    .join(__dirname, '/static')
-    .replace(/\\/g, '\\\\')
-}
+let mgearApp
 
-let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
-
-function createWindow () {
-  mainWindow = new BrowserWindow({
-    height: 1080,
-    width: 1920,
-    isFullScreen: true,
-    useContentSize: true
-  })
-
-  mainWindow.loadURL(winURL)
-
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
-}
-
-app.on('ready', createWindow)
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+app.on('ready', () => {
+  mgearApp = new MGearApplication()
+  global.mgearApp = mgearApp
+  mgearApp.init()
 })
 
 app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
+  if (mgearApp === null) {
+    mgearApp.init()
   }
-})
-
-app.on('ready', () => {
-
-  /** APP 启动时, 注册快捷键 */
-
-})
-
-app.on('will-quit', () => {
-
-  /** APP 退出前, 取消注册的所有快捷键 */
- 
 })

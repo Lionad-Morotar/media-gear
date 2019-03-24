@@ -5,7 +5,6 @@ import db from './dataStore'
 
 /** 项目工具引入 */
 import App from './App'
-import router from './router'
 import store from './store'
 import * as filters from './filters'
 import request from '@/utils/request'
@@ -43,7 +42,9 @@ Vue.prototype.$db = db
 // eslint-disable no-new
 new Vue({
   components: { App },
-  router,
+  router: process.env.NODE_ENV === 'development'
+    ? require('./router/dev.js').default
+    : require('./router/index.js').default,
   store,
   template: '<App/>',
   data: {
