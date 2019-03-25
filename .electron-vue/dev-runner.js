@@ -16,6 +16,8 @@ let electronProcess = null
 let manualRestart = false
 let hotMiddleware
 
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true
+
 function logStats (proc, data) {
   let log = ''
 
