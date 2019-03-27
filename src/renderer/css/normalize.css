@@ -2,6 +2,7 @@
 
 /** Changing
  * 1. remove 'font-family'
+ * 2. change html,body height&width to 100%
  */
 
 /**
@@ -18,6 +19,12 @@ html {
   line-height: 1.15; /* 2 */
   -ms-text-size-adjust: 100%; /* 3 */
   -webkit-text-size-adjust: 100%; /* 3 */
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
 }
 
 /* Sections

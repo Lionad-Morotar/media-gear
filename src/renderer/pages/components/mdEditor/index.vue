@@ -1,116 +1,122 @@
 <template>
-  <div :id="id" />
+  <div :id="id" class="t-editor">
+
+    <div class="wrapper fss max">
+      <textarea
+        class="left-panel"
+        v-model="value"
+      />
+      <div class="panel-gap"></div>
+      <div class="right-panel">
+        <div v-html="parsedValue" />
+      </div>
+    </div>
+
+  </div>
 </template>
 
 <script>
 
-import Editor from 'tui-editor'
+import { parse } from './strParser'
 
-import 'codemirror/lib/codemirror.css'
-import 'tui-editor/dist/tui-editor.css'
-import 'tui-editor/dist/tui-editor-contents.css'
-
-import defaultOptions from './defaultOptions'
+const basicOptions = {}
 
 export default {
-  name: 'markdown-editor',
+  name: 't-editor',
   props: {
-    value: {
-      type: String,
-      default: ''
-    },
+
+    // 编辑器ID
     id: {
       type: String,
       default () {
         return 'markdown-editor-' + this.$utils.getRandomNumber()
       }
     },
+
+    // 扩充选项
     options: {
       type: Object,
       default () {
-        return defaultOptions
+        return {}
       }
-    },
-    mode: {
-      type: String,
-      default: 'markdown'
-    },
-    height: {
-      type: String,
-      required: false,
-      default: '300px'
     }
   },
   data () {
     return {
-      editor: null
+      value: '',
+      parsedValue: ''
     }
   },
 
   computed: {
-    editorOptions () {
-      const options = Object.assign({}, defaultOptions, this.options)
-      options.initialEditType = this.mode
-      options.height = this.height
+    innerOptions () {
+      const options = Object.assign({}, basicOptions, this.options)
 
       return options
     }
   },
   watch: {
-    value (newValue, preValue) {
-      // && newValue !== this.editor.getValue()
-      if (newValue !== preValue) {
-        this.editor.setValue(newValue)
-      }
-    },
-    height (newValue) {
-      this.editor.height(newValue)
-    },
-    mode (newValue) {
-      this.editor.changeMode(newValue)
+    value (n, o) {
+      // TODO bounding
+      this.parsedValue = parse(n)
     }
   },
 
   mounted () {
     this.initEditor()
   },
-  destroyed () {
-    this.destroyEditor()
-  },
 
   methods: {
 
+    /** LIFE CIRCLE FUNC */
+
     initEditor () {
-      this.editor = new Editor({
-        el: document.getElementById(this.id),
-        ...this.editorOptions
-      })
-      if (this.value) {
-        this.editor.setValue(this.value)
-      }
-      // this.editor.on('change', () => {
-      //   this.$emit('input', this.editor.getValue())
-      // })
-      // this.editor.off('change')
-    },
-    destroyEditor () {
-      if (this.editor) {
-        this.editor.remove()
-      }
+      const { value } = this.innerOptions
+
+      value && this.setValue(value)
     },
 
+    /** LOGIC FUNC */
+
+    /** ATOM FUNC */
+
     setValue (value) {
-      this.editor.setValue(value)
+      this.value = value
     },
     getValue () {
-      return this.editor.getValue()
-    },
-    setHtml (value) {
-      this.editor.setHtml(value)
-    },
-    getHtml () {
-      return this.editor.getHtml()
+      return this.value
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+@import url('./css/basic.scss');
+
+.t-editor {
+  width: 100%;
+  height: 100%;
+
+  .left-panel,
+  .right-panel {
+    flex-basis: 50%;
+    padding: 50px;
+    height: 100%;
+    border: 0;
+    color: #3a3a3a;
+    line-height: 1.45em;
+  }
+  .panel-gap {
+    width: 1px;
+    height: 100%;
+    background: #e3e3e3;
+  }
+}
+
+.left-panel {
+  background-color: #f5f5f5;
+}
+
+</style>
+

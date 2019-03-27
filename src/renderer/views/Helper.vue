@@ -63,8 +63,6 @@ export default {
   line-height: 60px;
   border-radius: 10px;
   border: solid 1px #999;
-  box-shadow: none;
-  outline: none;
   font-size: 30px;
   transition: border .1s;
 

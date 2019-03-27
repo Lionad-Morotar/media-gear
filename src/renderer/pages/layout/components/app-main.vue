@@ -19,10 +19,10 @@ export default {
 
 <style scoped>
 #app-main {
-  min-height: calc(100vh - 75px);
+  height: calc(100vh - 75px);
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 </style>
 

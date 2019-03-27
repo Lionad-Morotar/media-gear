@@ -12,10 +12,25 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: '微软雅黑';
+  outline: none;
+  box-shadow: none;
   font-family: 'Noto Sans SC', sans-serif;
+  resize: none;
+}
+*:focus,
+*:hover {
+  outline: none;
+  box-shadow: none;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
 
 
 /** ICONFONT */
