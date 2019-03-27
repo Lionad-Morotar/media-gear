@@ -15,25 +15,29 @@ export default {
   components: { mdEditor },
   data () {
     return {
-      content: `# Lionad's Editor
+      content: (`# T-Editor
 
-Hello, everyone, my name is t-editor!
+你好, 我是使用状态机实现的超轻量Markdown预览工具, 名字叫做\`T-Editor\`~
 
-### header
-##### header 5
-###### header 6
+### 功能 : Header
+##### Header 5
+##### Header with \`word\`
 
-### list
+### 功能 : Unsorted List
 * list 1
 * list 2
 * list 3
 
-### code
-And I can display \`code\` for you ~
+### 功能 : Word
+And \`Then\` Thank U \`For\` \`Watching\` ~
 
-### blockquote
-> I am a blockquote
-`
+### 功能 : Block Quote
+> ### 可以使用 Header with \`word\`
+>  也可以使用词块\`Word in block\`
+> 或者是列表:
+> * 1
+> * 2
+> * 3`)
     }
   }
 }

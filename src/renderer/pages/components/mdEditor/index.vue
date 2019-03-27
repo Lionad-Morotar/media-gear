@@ -8,7 +8,10 @@
       />
       <div class="panel-gap"></div>
       <div class="right-panel">
-        <div v-html="parsedValue" />
+        <div
+          class="right-panel-content"
+          v-html="parsedValue"
+        />
       </div>
     </div>
 
@@ -106,6 +109,14 @@ export default {
     border: 0;
     color: #3a3a3a;
     line-height: 1.45em;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      background: rgba(0,0,0,.3);
+    }
   }
   .panel-gap {
     width: 1px;

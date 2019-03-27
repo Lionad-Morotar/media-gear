@@ -4,6 +4,7 @@ h3,
 h4,
 h5,
 h6 {
+  // display: inline-block;
   margin-top: 1em;
   margin-bottom: 16px;
   font-weight: bold;
@@ -11,6 +12,15 @@ h6 {
 }
 h1 {
   border-bottom: 1px solid #eee;
+}
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+  padding: 0 .3em;
+  font-size: 90%;
 }
 
 p,
@@ -21,7 +31,9 @@ dl,
 table,
 pre {
   margin-top: 0;
-  margin-bottom: 16px;
+}
+p {
+  display: inline;
 }
 
 /** blockquote */
@@ -31,21 +43,26 @@ blockquote {
   color: #777;
   border-left: 4px solid #ddd;
 }
-blockquote>:first-child {
-  margin-top: 0;
+blockquote:last-of-type {
+  margin-bottom: 1em;
 }
-blockquote>:last-child {
+blockquote h1,
+blockquote h2,
+blockquote h3,
+blockquote h4,
+blockquote h5,
+blockquote h6 {
+  margin-top: .5em;
   margin-bottom: 0;
+  padding-bottom: .3em;
+  border-bottom: 0;
 }
 
 /** code */
 
-.code {
-  padding: 0;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-  margin: 0;
+code {
+  padding: 0 .45em;
   font-size: 85%;
+  border-radius: 4px;
   background-color: rgba(0,0,0,0.04);
-  border-radius: 3px;
 }

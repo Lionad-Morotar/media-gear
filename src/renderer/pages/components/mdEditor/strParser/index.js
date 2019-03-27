@@ -4,66 +4,193 @@
 
 /* eslint-disable */
 
-/** 一些常用的捕获正则 */
+/** 节点权重 */
 
-const reAlphaChar = /.[a-zA-Z]/
-const reNumberChar = /.[0-9]/
+const PBI = 1000 // POINT_BLOCK_ITEM
+const PLI = 100 // POINT_LINE_ITEM
+const PILBI = 10 // POINT_INLINE_BLOCK_ITEM
+const point = {
+  blockquote: PBI,
+  div: PBI,
+  hr: 999,
+  h: PLI,
+  h1: PLI,
+  h2: PLI,
+  h3: PLI,
+  h4: PLI,
+  h5: PLI,
+  h6: PLI,
+  li: 11,
+  p: PILBI,
+  code: PILBI,
+  span: 1,
+  null: 0
+}
+
+/** 特殊状态元素 */
+
+const inlineBlockElement = ['p', 'code']
+const canLeverUpElement = ['h']
+const canLeverUpEleInitStateReflex = {
+  h: 1
+}
+const leverUpHandler = {
+  h: num => num < 6 ? num + 1 : 6
+}
 
 /** 状态机 state machine */
 
+let lines = 1
 let flag = null
-const stateInitReflex = {
-  h: 1
-}
+let flagRec = []
+let lerverUp = false
+let inlineItem = false
+let noTraillingSpace = false
+// let lastPoint = 0
 const F_SM = {
-  'NULL': () => {
+  INIT: () => {
+    lines = 1
+    flag = null
+    flagRec = []
+    lerverUp = false
+    inlineItem = false
+    noTraillingSpace = false
+  },
+  NULL: () => {
     flag = null
   },
-  'CHANG': state => {
-    flag = state
-  },
-  'KEEP': (state = 'div') => {
-    if (!flag) {
-      F_SM['CHANG'](state)
+  CHANGE: state => {
+    if (flag !== state) {
+      flag = state
+      // lastPoint = point[flag]
     }
   },
-  'LEVER_UP': state => {
+  KEEP: state => {
+    if (canLeverUpElement.includes(state)) {
+      F_SM.LEVER_UP(state)
+    }
+  },
+  DIG_IN: state => {
+    flagRec.push(flag)
+    F_SM.CHANGE(state)
+  },
+  DIG_OUT: () => {
+    R_SM.TAG_END(flag)
+    if (flagRec.length) {
+      const newFlag = flagRec.pop()
+      F_SM.CHANGE(newFlag)
+    } else {
+      F_SM.NULL()
+    }
+  },
+  LEVER_UP: state => {
+    lerverUp = true
     const num = flag && +flag.replace(state, '')
     if (flag && num) {
-      flag = `${state}${num + 1}`
+      flag = `${state}${leverUpHandler[state](num)}`
     } else {
-      flag = `${state}${stateInitReflex[state]}`
+      (point[flag] > point[state])
+        ? F_SM.DIG_IN(flag)
+        : flag && R_SM.TAG_END(flag)
+      flag = `${state}${canLeverUpEleInitStateReflex[state]}`
     }
   },
-  'EXCUTE': () => {
-    flag ? (
-      R_SM['UNSHIFT'](),
-      S_SM['NULL'](),
-      F_SM['NULL']()
-    ) : (
-      F_SM['CHANG']('div'),
-      F_SM['EXCUTE']()
+  LEVER_DOWN: () => {
+    lerverUp = false
+    R_SM.TAG_START(flag)
+  },
+  NEW_LINE: () => {
+    F_SM.DIG_OUT_UNTIL_BLOCKITEM()
+    inlineItem = false
+  },
+  EXC_INLINE: () => {
+    inlineItem = !inlineItem
+  },
+  ACTIVE: state => {
+    state = state || (
+      inlineItem ? flag : 'p'
     )
+    const pf = point[flag]
+    const ps = point[state]
+    console.log(lines, char, state, ps, pf, flag, flagRec)
+
+    lerverUp && F_SM.LEVER_DOWN()
+
+    if (flag !== state) {
+      if (inlineItem) {
+        (point[flag] > point[state])
+          ? F_SM.DIG_IN(flag)
+          : flag && R_SM.TAG_END(flag)
+        F_SM.CHANGE(state)
+      } else {
+        if (ps > pf) {
+          console.log('>')
+          flagRec.length
+            ? (
+              F_SM.DIG_OUT_UNTIL_BLOCKED(flagRec[flagRec.length - 1]),
+              flag && R_SM.TAG_END(flag)
+            )
+            : F_SM.SHOW_DOWN()
+          F_SM.CHANGE(state)
+        } else if (pf === ps) {
+          console.log('=')
+          R_SM.TAG_END(flag)
+          F_SM.CHANGE(state)
+        } else {
+          console.log('<')
+          F_SM.DIG_IN(state)
+        }
+      }
+      R_SM.TAG_START(flag)
+    } else {
+      F_SM.KEEP(state)
+    }
+  },
+  // 将当前处理上档
+  EXCUTE: () => {
+    F_SM.DIG_OUT()
+  },
+  // 清空队列
+  SHOW_DOWN: () => {
+    while (flag) {
+      F_SM.EXCUTE()
+    }
+  },
+  DIG_OUT_UNTIL_BLOCKED: points => {
+    while (flag && point[flag] <= points) {
+      F_SM.EXCUTE()
+    }
+  },
+  DIG_OUT_UNTIL_BLOCKITEM: () => {
+    F_SM.DIG_OUT_UNTIL_BLOCKED(PBI)
   }
 }
 
 let stream = null
 const S_SM = {
-  'NULL': () => {
+  NULL: () => {
     stream = ''
   },
-  'ADD': (c) => {
+  ADD: (c) => {
     stream += c
   }
 }
 
 let result = null
 const R_SM = {
-  'NULL': () => {
+  NULL: () => {
     result = ''
   },
-  'UNSHIFT': () => {
-    result += `<${flag}>${stream}</${flag}>`
+  ADD: newStr => {
+    result += newStr
+  },
+  TAG_START: tag => {
+    R_SM.ADD(`<${tag}>`)
+  },
+  TAG_END: tag => {
+    R_SM.ADD(stream)
+    S_SM.NULL()
+    R_SM.ADD(`</${tag}>`)
   }
 }
 
@@ -73,46 +200,55 @@ const R_SM = {
  * @return {String} 用于展示的HTML片段
  */
 
+let char = ''
 export function parse (raw) {
-  R_SM['NULL']()
-  S_SM['NULL']()
-  F_SM['NULL']()
-  for (let i = 0, l = raw.length; i < l; i++) {
-    const curChar = raw[i]
-    handleCurChar(curChar)
-  }
-  if (stream) {
-    F_SM['EXCUTE']()
-  }
+  R_SM.NULL()
+  S_SM.NULL()
+  F_SM.INIT()
 
+  for (let i = 0, l = raw.length; i < l; i++) {
+    char = raw[i]
+    handleCurChar(raw[i])
+  }
+  F_SM.SHOW_DOWN()
+
+  console.log('@@@:', result)
   return result
 }
 const handleCurChar = curChar => {
   switch (curChar) {
-
+    case '`':
+      F_SM.EXC_INLINE()
+      F_SM.ACTIVE('code')
+    break
+    // case '+':
+    //   F_SM.EXC_INLINE()
+    //   F_SM.ACTIVE('sup')
+    // break
     case '#':
-      F_SM['LEVER_UP']('h')
+      noTraillingSpace = true
+      F_SM.LEVER_UP('h')
     break
-
     case '*':
-    case '-':
-    case '+':
-      F_SM['KEEP']('li')
+      noTraillingSpace = true
+      F_SM.ACTIVE('li')
     break
-
     case '>':
-      F_SM['KEEP']('blockquote')
+      noTraillingSpace = true
+      F_SM.ACTIVE('blockquote')
     break
-
     case '\n':
-      F_SM['EXCUTE']()
+      lines ++
+      F_SM.NEW_LINE()
     break
-
+    case ' ':
+      if (noTraillingSpace) {
+        return null
+      }
     default:
-      F_SM['KEEP']()
-      S_SM['ADD'](curChar)
+      noTraillingSpace = false
+      F_SM.ACTIVE()
+      S_SM.ADD(curChar)
     break
   }
 }
-
-/** ATOM FUNC */
