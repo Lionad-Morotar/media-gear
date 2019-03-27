@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div
-      id="helper-cmpt"
+      id="helper"
       class="fcc"
       v-show="active"
       @click="$store.dispatch('inActiveHelper')"
@@ -21,7 +21,7 @@
 <script>
 
 export default {
-  name: 'helper-cmpt',
+  name: 'helper',
   computed: {
     active () {
       const val = this.$store.getters.helperActive
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#helper-cmpt {
+#helper {
   position: fixed;
   top: 0;
   left: 0;

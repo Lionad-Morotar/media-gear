@@ -69,10 +69,6 @@ export const KeyboardListener = {
         }
       }
 
-      // check type
-      if (this.confStore.type.includes('intercept-all')) {
-        // e.preventDefault()
-      }
       if (this.canSetVector) {
         pushIn()
       }

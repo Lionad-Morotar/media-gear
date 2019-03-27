@@ -1,5 +1,5 @@
 <template>
-  <section class="app-main">
+  <section id="app-main">
     <keep-alive>
       <router-view :key="key" />
     </keep-alive>
@@ -18,8 +18,8 @@ export default {
 </script>
 
 <style scoped>
-.app-main {
-  min-height: calc(100vh - 50px);
+#app-main {
+  min-height: calc(100vh - 75px);
   width: 100%;
   position: relative;
   overflow: hidden;

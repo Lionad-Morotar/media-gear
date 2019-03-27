@@ -7,19 +7,24 @@
     <!-- 页面内容 -->
     <app-main />
 
+    <!-- status bar -->
+    <status-bar />
+
   </div>
 </template>
 
 <script>
 
-import Navbar from './components/Navbar'
-import AppMain from './components/AppMain'
+import navbar from './components/navbar'
+import AppMain from './components/app-main'
+import StatusBar from './components/status-bar'
 
 export default {
   name: 'layout-components',
   components: {
-    Navbar,
-    AppMain
+    navbar,
+    AppMain,
+    StatusBar
   }
 }
 </script>
