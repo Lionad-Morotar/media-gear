@@ -36,6 +36,9 @@ Vue.prototype.$request = request
 // NeDB 数据库
 Vue.prototype.$db = db
 
+// 全局工具
+Vue.prototype.$utils = require('./utils/index').default
+
 // Element UI
 // Vue.use(Element)
 
