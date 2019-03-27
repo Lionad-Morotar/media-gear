@@ -7,19 +7,15 @@
 </template>
 
 <script>
+
 import mdEditor from './components/mdEditor'
-const content = `
-**This is test**
-* vue
-* element
-* webpack
-`
+
 export default {
   name: 'MarkdownDemo',
   components: { mdEditor },
   data () {
     return {
-      content
+      content: ''
     }
   }
 }

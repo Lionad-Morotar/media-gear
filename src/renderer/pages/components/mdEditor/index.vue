@@ -3,14 +3,17 @@
 </template>
 
 <script>
-// deps for editor
-import 'codemirror/lib/codemirror.css' // codemirror
-import 'tui-editor/dist/tui-editor.css' // editor ui
-import 'tui-editor/dist/tui-editor-contents.css' // editor content
+
 import Editor from 'tui-editor'
-import defaultOptions from './options'
+
+import 'codemirror/lib/codemirror.css'
+import 'tui-editor/dist/tui-editor.css'
+import 'tui-editor/dist/tui-editor-contents.css'
+
+import defaultOptions from './defaultOptions'
+
 export default {
-  name: 'MarddownEditor',
+  name: 'markdown-editor',
   props: {
     value: {
       type: String,
@@ -18,9 +21,8 @@ export default {
     },
     id: {
       type: String,
-      required: false,
       default () {
-        return 'markdown-editor-' + +new Date() + ((Math.random() * 1000).toFixed(0) + '')
+        return 'markdown-editor-' + this.$utils.getRandomNumber()
       }
     },
     options: {
@@ -37,11 +39,6 @@ export default {
       type: String,
       required: false,
       default: '300px'
-    },
-    language: {
-      type: String,
-      required: false,
-      default: 'en_US' // https://github.com/nhnent/tui.editor/tree/master/src/js/langs
     }
   },
   data () {
@@ -49,24 +46,22 @@ export default {
       editor: null
     }
   },
+
   computed: {
     editorOptions () {
       const options = Object.assign({}, defaultOptions, this.options)
       options.initialEditType = this.mode
       options.height = this.height
-      options.language = this.language
+
       return options
     }
   },
   watch: {
     value (newValue, preValue) {
-      if (newValue !== preValue && newValue !== this.editor.getValue()) {
+      // && newValue !== this.editor.getValue()
+      if (newValue !== preValue) {
         this.editor.setValue(newValue)
       }
-    },
-    language (val) {
-      this.destroyEditor()
-      this.initEditor()
     },
     height (newValue) {
       this.editor.height(newValue)
@@ -75,13 +70,16 @@ export default {
       this.editor.changeMode(newValue)
     }
   },
+
   mounted () {
     this.initEditor()
   },
   destroyed () {
     this.destroyEditor()
   },
+
   methods: {
+
     initEditor () {
       this.editor = new Editor({
         el: document.getElementById(this.id),
@@ -90,15 +88,17 @@ export default {
       if (this.value) {
         this.editor.setValue(this.value)
       }
-      this.editor.on('change', () => {
-        this.$emit('input', this.editor.getValue())
-      })
+      // this.editor.on('change', () => {
+      //   this.$emit('input', this.editor.getValue())
+      // })
+      // this.editor.off('change')
     },
     destroyEditor () {
-      if (!this.editor) return
-      this.editor.off('change')
-      this.editor.remove()
+      if (this.editor) {
+        this.editor.remove()
+      }
     },
+
     setValue (value) {
       this.editor.setValue(value)
     },
