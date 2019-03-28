@@ -55,9 +55,11 @@ export default {
       value: '',
       parsedValue: '',
       timer: {
+        parse: null,
         scroll: null,
         time: +new Date()
-      }
+      },
+      memo: {}
     }
   },
 
@@ -70,8 +72,17 @@ export default {
   },
   watch: {
     value (n, o) {
-      // TODO bounding
-      this.parsedValue = parse(n)
+      if (!this.timer.parse) {
+        // if (this.memo[n]) {
+        //   this.parsedValue = this.memo[n]
+        // } else {
+        //   this.memo[n] = this.parsedValue = parse(n)
+        // }
+        this.parsedValue = parse(n)
+        this.timer.parse = setTimeout(() => {
+          this.timer.parse = null
+        }, 200)
+      }
     }
   },
 
@@ -159,12 +170,6 @@ export default {
     line-height: 1.45em;
     overflow-x: hidden;
     overflow-y: scroll;
-
-    &::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-      background: rgba(0,0,0,.3);
-    }
   }
   .panel-gap {
     width: 1px;
