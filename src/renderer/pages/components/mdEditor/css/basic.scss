@@ -46,6 +46,7 @@ blockquote {
 blockquote:last-of-type {
   margin-bottom: 1em;
 }
+
 blockquote h1,
 blockquote h2,
 blockquote h3,
@@ -56,6 +57,15 @@ blockquote h6 {
   margin-bottom: 0;
   padding-bottom: .3em;
   border-bottom: 0;
+}
+blockquote blockquote h1,
+blockquote blockquote h2,
+blockquote blockquote h3,
+blockquote blockquote h4,
+blockquote blockquote h5,
+blockquote blockquote h6,
+blockquote blockquote:last-of-type {
+  margin: 0;
 }
 
 /** code */

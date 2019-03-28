@@ -31,7 +31,8 @@ const point = {
 
 /** 特殊状态元素 */
 
-const inlineBlockElement = ['p', 'code']
+const blockElement = ['blockquote']
+const inlineBlockElement = ['p', 'code', 'sup', 'sub']
 const canLeverUpElement = ['h']
 const canLeverUpEleInitStateReflex = {
   h: 1
@@ -62,7 +63,7 @@ const F_SM = {
     flag = null
   },
   CHANGE: state => {
-    if (flag !== state) {
+    if (blockElement.includes(state) || flag !== state) {
       flag = state
       // lastPoint = point[flag]
     }
@@ -145,7 +146,12 @@ const F_SM = {
       }
       R_SM.TAG_START(flag)
     } else {
-      F_SM.KEEP(state)
+      if (inlineBlockElement.includes(flag)) {
+        F_SM.KEEP(state)
+      } else {
+        R_SM.TAG_START(flag)
+        F_SM.DIG_IN(state)
+      }
     }
   },
   // 将当前处理上档
