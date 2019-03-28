@@ -23,6 +23,8 @@ const point = {
   li: 11,
   p: PILBI,
   code: PILBI,
+  sup: PILBI,
+  sub: PILBI,
   span: 1,
   null: 0
 }
@@ -221,10 +223,14 @@ const handleCurChar = curChar => {
       F_SM.EXC_INLINE()
       F_SM.ACTIVE('code')
     break
-    // case '+':
-    //   F_SM.EXC_INLINE()
-    //   F_SM.ACTIVE('sup')
-    // break
+    case '+':
+      F_SM.EXC_INLINE()
+      F_SM.ACTIVE('sup')
+    break
+    case '-':
+      F_SM.EXC_INLINE()
+      F_SM.ACTIVE('sub')
+    break
     case '#':
       noTraillingSpace = true
       F_SM.LEVER_UP('h')
