@@ -3,11 +3,17 @@
 
     <div class="wrapper fss max">
       <textarea
-        class="left-panel"
+        ref="left-panel"
+        class="left-panel left"
         v-model="value"
+        @scroll="scroll($event, 'left')"
       />
       <div class="panel-gap"></div>
-      <div class="right-panel">
+      <div
+        ref="right-panel"
+        class="right-panel right"
+        @scroll="scroll($event, 'right')"
+      >
         <div
           class="right-panel-content"
           v-html="parsedValue"
@@ -47,7 +53,11 @@ export default {
   data () {
     return {
       value: '',
-      parsedValue: ''
+      parsedValue: '',
+      timer: {
+        scroll: null,
+        time: +new Date()
+      }
     }
   },
 
@@ -80,6 +90,44 @@ export default {
     },
 
     /** LOGIC FUNC */
+
+    // TODO 更加精准的同步滚动
+    scroll (e, panel) {
+      const l = this.$refs['left-panel']
+      const r = this.$refs['right-panel']
+      // if (!Array.from(e.target.classList).includes(panel)) return null
+
+      const syncScroll = () => {
+        if (panel === 'left') {
+          const leftRatio = (l.scrollTop / l.scrollHeight).toFixed(2)
+          // console.log(+new Date() - this.timer.time)
+          // this.timer.time = +new Date()
+          r.scrollTop = r.scrollHeight * leftRatio
+        } else if (panel === 'right') {
+          const rightRatio = (r.scrollTop / r.scrollHeight).toFixed(2)
+          // console.log(+new Date() - this.timer.time)
+          // this.timer.time = +new Date()
+          l.scrollTop = l.scrollHeight * rightRatio
+        }
+      }
+
+      if (!this.timer.scroll) {
+        syncScroll()
+        this.timer.scroll = setTimeout(() => {
+          this.timer.scroll = null
+        }, 17)
+      }
+      // if (window.requestAnimationFrame) {
+      //   window.requestAnimationFrame(syncScroll)
+      // } else {
+      //   if (!this.timer.scroll) {
+      //     syncScroll()
+      //     this.timer.scroll = setTimeout(() => {
+      //       this.timer.scroll = null
+      //     }, 16)
+      //   }
+      // }
+    },
 
     /** ATOM FUNC */
 
