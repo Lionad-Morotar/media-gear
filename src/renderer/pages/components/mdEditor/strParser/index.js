@@ -115,7 +115,7 @@ const F_SM = {
     )
     const pf = point[flag]
     const ps = point[state]
-    console.log(lines, char, state, ps, pf, flag, flagRec)
+    // console.log(lines, char, state, ps, pf, flag, flagRec)
 
     lerverUp && F_SM.LEVER_DOWN()
 
@@ -127,7 +127,7 @@ const F_SM = {
         F_SM.CHANGE(state)
       } else {
         if (ps > pf) {
-          console.log('>')
+          // console.log('>')
           flagRec.length
             ? (
               F_SM.DIG_OUT_UNTIL_BLOCKED(flagRec[flagRec.length - 1]),
@@ -136,11 +136,11 @@ const F_SM = {
             : F_SM.SHOW_DOWN()
           F_SM.CHANGE(state)
         } else if (pf === ps) {
-          console.log('=')
+          // console.log('=')
           R_SM.TAG_END(flag)
           F_SM.CHANGE(state)
         } else {
-          console.log('<')
+          // console.log('<')
           F_SM.DIG_IN(state)
         }
       }
@@ -220,7 +220,7 @@ export function parse (raw) {
   }
   F_SM.SHOW_DOWN()
 
-  console.log('@@@:', result)
+  // console.log('@@@:', result)
   return result
 }
 const handleCurChar = curChar => {
