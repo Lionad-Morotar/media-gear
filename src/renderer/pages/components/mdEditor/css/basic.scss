@@ -1,3 +1,12 @@
+p,
+div,
+span {
+  word-wrap: break-word;
+}
+::selection {
+  background-color: rgba(0,0,0,.1);
+}
+
 h1,
 h2,
 h3,
@@ -8,7 +17,6 @@ h6 {
   margin-top: 1em;
   margin-bottom: 16px;
   font-weight: bold;
-  line-height: 1.4;
 }
 h1 {
   border-bottom: 1px solid #eee;

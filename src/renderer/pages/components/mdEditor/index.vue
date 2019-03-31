@@ -166,8 +166,8 @@ export default {
     padding: 50px;
     height: 100%;
     border: 0;
+    line-height: 1.6em;
     color: #3a3a3a;
-    line-height: 1.45em;
     overflow-x: hidden;
     overflow-y: scroll;
   }
