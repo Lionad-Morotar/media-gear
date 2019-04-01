@@ -21,6 +21,8 @@
   outline: none;
   box-shadow: none;
   font-family: 'Noto Sans SC', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   resize: none;
 }
 *:focus,
