@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <noscript>You need to enable the urrr~~~ JavaScript to run this app.</noscript>
 
     <!-- app -->
     <router-view />
