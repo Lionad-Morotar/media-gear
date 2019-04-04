@@ -22,12 +22,13 @@ class MGearWindow {
         this.window,
         {
           type: 'question',
-          buttons: ['确定', '取消'],
+          buttons: ['取消', '确定'],
           title: '确认',
           message: '将要关闭窗口?'
         }
       )
-      choice === 0 ? (
+      console.log(choice)
+      choice === 1 ? (
         mgearApp.windows.splice(mgearApp.windows.indexOf(this), 1),
         mgearApp.windows === 0 && (mgearApp = null)
       ) : (
