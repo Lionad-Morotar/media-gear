@@ -37,6 +37,10 @@ let mainConfig = {
         test: /\.node$/,
         use: 'node-loader'
       }
+      // {
+      //   test: /\.webp$/,
+      //   use: 'file-loader'
+      // }
     ]
   },
   node: {
