@@ -1,16 +1,13 @@
 'use strict'
 
-/* eslint-disable */
-
 import { app } from 'electron'
 import MGearApplication from '../app/mgear-app'
 
 let mgearApp
 
 app.on('ready', () => {
-  mgearApp = new MGearApplication()
-  global.mgearApp = mgearApp
-  mgearApp.init()
+  global.mgearApp = mgearApp = new MGearApplication()
+  handleTrayEvent()
 })
 
 app.on('activate', () => {
@@ -18,3 +15,11 @@ app.on('activate', () => {
     mgearApp.init()
   }
 })
+
+function handleTrayEvent () {
+  console.log(mgearApp)
+  // mgearApp.tray.on('click', () => {
+  //   console.log('1')
+  //   mgearApp.isVisible() ? mgearApp.hide() : mgearApp.show()
+  // })
+}
