@@ -73,6 +73,9 @@ Node.prototype.unLink = function () {
 
 /** LRU prototype */
 
+LRU.prototype.has = function (key) {
+  return this.nodeMemo[key]
+}
 LRU.prototype.get = function (key) {
   let handle = this.nodeMemo[key]
   if (handle) {
@@ -124,3 +127,5 @@ LRU.prototype.addNodeWeight = function (node, w = 1) {
     }
   }
 }
+
+export default LRU

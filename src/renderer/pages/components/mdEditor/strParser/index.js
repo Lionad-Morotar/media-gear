@@ -4,6 +4,8 @@
 
 /* eslint-disable */
 
+import LRU from './lru'
+
 /** 节点权重 */
 
 const PBI = 1000 // POINT_BLOCK_ITEM
@@ -259,12 +261,20 @@ const handleCurChar = curChar => {
     break
   }
 }
-const memo = {}, memoCount = 0
+const mdLRU = new LRU()
 export function parse (raw) {
-  const res = [];
-  (raw.split('\n') || []).map(line => {
-    parseLine(line)
-    res.push(result)
+  let parseLineCount = 0
+  const res = []
+  raw.split('\n').map(line => {
+    if (mdLRU.has(line)) {
+      res.push(mdLRU.get(line))
+    } else {
+      parseLine(line)
+      parseLineCount++
+      mdLRU.set(line, result)
+      res.push(result)
+    }
   })
+  console.log(`$ParseEnd & mdLRU.nodeLength: ${mdLRU.nodeLength} parseLineCount: ${parseLineCount}`)
   return res.join('\n')
 }
