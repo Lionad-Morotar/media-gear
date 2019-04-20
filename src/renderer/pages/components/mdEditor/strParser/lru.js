@@ -1,3 +1,28 @@
+/** LRU 链表实现
+ * @example
+ * ```
+ * const mdLRU = new LRU(4)
+ * mdLRU.set('1', 1)
+ * mdLRU.set('2', 2)
+ * mdLRU.set('3', 3)
+ * mdLRU.set('4', 4)
+ * mdLRU.set('5', 5)
+ * mdLRU.get('5')
+ * mdLRU.get('5')
+ * mdLRU.get('3')
+ * mdLRU.get('3')
+ * mdLRU.get('3')
+ * mdLRU.get('3')
+ * mdLRU.set('5', 6)
+ * mdLRU.set('7', 7)
+ * mdLRU.showAllNode()
+ * // Node : 5 has data 6 and weight 13
+ * // Node : 3 has data 3 and weight 5
+ * // Node : 1 has data 1 and weight 1
+ * // Node : 7 has data 7 and weight 1
+ * ```
+ */
+
 /** Constructor */
 
 function LRU (limit) {
@@ -6,7 +31,7 @@ function LRU (limit) {
   this.headNode.linkNext(this.tailNode)
   this.nodeMemo = {}
   this.nodeLength = 0
-  this.memoCountLimit = limit || 999
+  this.nodeLengthLimit = limit || 999
 }
 function Node (config) {
   this.key = config.key
@@ -49,26 +74,38 @@ Node.prototype.unLink = function () {
 /** LRU prototype */
 
 LRU.prototype.get = function (key) {
-  let handle = this.headNode
-  while (handle.next) {
-    handle = handle.next
-    if (handle.key === key) {
-      this.addNodeWeight(handle)
-      return handle.data
-    }
+  let handle = this.nodeMemo[key]
+  if (handle) {
+    this.addNodeWeight(handle)
+    return handle.data.val
+  } else {
+    throw new Error(`Key : ${key} is not fount in LRU Nodes`)
   }
-  console.warn(`Key : ${key} is not fount in LRU Nodes`)
 }
 
 LRU.prototype.set = function (key, val) {
-  const newNode = new Node({ key, data: { val, weight: 1 } })
-  newNode.insertAfter(this.tailNode.prev)
+  const handleNode = this.nodeMemo[key]
+  if (handleNode) {
+    this.addNodeWeight(handleNode, 10)
+    handleNode.data.val = val
+  } else {
+    if (this.nodeLength < this.nodeLengthLimit) {
+      this.nodeLength++
+    } else {
+      const deleteNode = this.tailNode.prev
+      deleteNode.unLink()
+      delete this.nodeMemo[deleteNode.key]
+    }
+    const newNode = new Node({ key, data: { val, weight: 1 } })
+    this.nodeMemo[key] = newNode
+    newNode.insertAfter(this.tailNode.prev)
+  }
 }
 
 LRU.prototype.showAllNode = function () {
   let next = this.headNode.next
-  while (next) {
-    console.log(`Node : ${next.key} has data ${next.data}`)
+  while (next && next.next) {
+    console.log(`Node : ${next.key} has data ${next.data.val} and weight ${next.data.weight}`)
     next = next.next
   }
 }
@@ -87,18 +124,3 @@ LRU.prototype.addNodeWeight = function (node, w = 1) {
     }
   }
 }
-
-const mdLRU = new LRU()
-mdLRU.set('1', 1)
-mdLRU.set('2', 2)
-mdLRU.set('3', 3)
-mdLRU.set('4', 4)
-mdLRU.set('5', 5)
-mdLRU.get('5')
-mdLRU.get('5')
-mdLRU.get('3')
-mdLRU.get('3')
-mdLRU.get('3')
-mdLRU.get('3')
-mdLRU.set('1')
-mdLRU.showAllNode()
