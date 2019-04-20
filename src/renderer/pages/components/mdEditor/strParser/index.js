@@ -12,7 +12,7 @@ const PILBI = 10 // POINT_INLINE_BLOCK_ITEM
 const point = {
   blockquote: PBI,
   div: PBI,
-  hr: 999,
+  hr: PBI - 1,
   h: PLI,
   h1: PLI,
   h2: PLI,
@@ -115,7 +115,6 @@ const F_SM = {
     )
     const pf = point[flag]
     const ps = point[state]
-    // console.log(lines, char, state, ps, pf, flag, flagRec)
 
     lerverUp && F_SM.LEVER_DOWN()
 
@@ -209,19 +208,15 @@ const R_SM = {
  */
 
 let char = ''
-export function parse (raw) {
+const parseLine = line => {
   R_SM.NULL()
   S_SM.NULL()
   F_SM.INIT()
-
-  for (let i = 0, l = raw.length; i < l; i++) {
-    char = raw[i]
-    handleCurChar(raw[i])
+  for (let i = 0, l = line.length; i < l; i++) {
+    char = line[i]
+    handleCurChar(line[i])
   }
   F_SM.SHOW_DOWN()
-
-  // console.log('@@@:', result)
-  return result
 }
 const handleCurChar = curChar => {
   switch (curChar) {
@@ -263,4 +258,13 @@ const handleCurChar = curChar => {
       S_SM.ADD(curChar)
     break
   }
+}
+const memo = {}, memoCount = 0
+export function parse (raw) {
+  const res = [];
+  (raw.split('\n') || []).map(line => {
+    parseLine(line)
+    res.push(result)
+  })
+  return res.join('\n')
 }
