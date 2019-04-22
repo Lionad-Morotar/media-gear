@@ -1,0 +1,7 @@
+$main-color: #243A52;
+
+@for $i from 1 to 6 {
+  .h#{$i} {
+    color: $main-color;
+  }
+}
