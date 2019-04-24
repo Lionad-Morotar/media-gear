@@ -155,6 +155,7 @@ export default {
 <style lang="scss" scoped>
 
 @import url('./css/basic.scss');
+@import url('./css/main-theme.scss');
 
 .t-editor {
   width: 100%;

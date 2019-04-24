@@ -1,0 +1,14 @@
+$main-color: #243A52;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $main-color
+}
+h1 {
+  padding-bottom: 20px;
+  border-bottom: solid 1px #eee;
+}
