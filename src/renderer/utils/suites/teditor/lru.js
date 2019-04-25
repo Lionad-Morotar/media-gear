@@ -1,27 +1,4 @@
-/** LRU 链表实现
- * @example
- * ```
- * const mdLRU = new LRU(4)
- * mdLRU.set('1', 1)
- * mdLRU.set('2', 2)
- * mdLRU.set('3', 3)
- * mdLRU.set('4', 4)
- * mdLRU.set('5', 5)
- * mdLRU.get('5')
- * mdLRU.get('5')
- * mdLRU.get('3')
- * mdLRU.get('3')
- * mdLRU.get('3')
- * mdLRU.get('3')
- * mdLRU.set('5', 6)
- * mdLRU.set('7', 7)
- * mdLRU.showAllNode()
- * // Node : 5 has data 6 and weight 13
- * // Node : 3 has data 3 and weight 5
- * // Node : 1 has data 1 and weight 1
- * // Node : 7 has data 7 and weight 1
- * ```
- */
+/** LRU 链表实现 */
 
 /** Constructor */
 
@@ -74,13 +51,21 @@ Node.prototype.unLink = function () {
 /** LRU prototype */
 
 LRU.prototype.has = function (key) {
-  return this.nodeMemo[key]
+  return !!this.nodeMemo[key]
 }
 LRU.prototype.get = function (key) {
   let handle = this.nodeMemo[key]
   if (handle) {
     this.addNodeWeight(handle)
     return handle.data.val
+  } else {
+    throw new Error(`Key : ${key} is not fount in LRU Nodes`)
+  }
+}
+LRU.prototype.getNodeWeight = function (key) {
+  let handle = this.nodeMemo[key]
+  if (handle) {
+    return handle.data.weight
   } else {
     throw new Error(`Key : ${key} is not fount in LRU Nodes`)
   }
@@ -105,7 +90,7 @@ LRU.prototype.set = function (key, val) {
   }
 }
 
-LRU.prototype.showAllNode = function () {
+LRU.prototype.showAllNodes = function () {
   let next = this.headNode.next
   while (next && next.next) {
     console.log(`Node : ${next.key} has data ${next.data.val} and weight ${next.data.weight}`)

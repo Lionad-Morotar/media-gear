@@ -26,7 +26,7 @@
 
 <script>
 
-import { parse } from './strParser'
+import { parse } from '@/utils/suites/teditor'
 
 const basicOptions = {}
 

@@ -20,7 +20,8 @@
     "test": "npm run unit && npm run e2e",
     "unit": "cross-env ELECTRON_DISABLE_SECURITY_WARNINGS=TRUE karma start test/unit/karma.conf.js",
     "postinstall": "npm run lint:fix",
-    "unit:filters": "cross-env TEST_FILE=filters karma start test/unit/karma.conf.js"
+    "unit:filters": "cross-env TEST_FILE=filters karma start test/unit/karma.conf.js",
+    "unit:algorithm": "cross-env TEST_FILE=algorithm karma start test/unit/karma.conf.js"
   },
   "build": {
     "productName": "MGear",
