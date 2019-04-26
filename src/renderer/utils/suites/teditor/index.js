@@ -243,7 +243,6 @@ const handleCurChar = curChar => {
       F_SM.ACTIVE('li')
     break
     case '>':
-      noTraillingSpace = true
       F_SM.ACTIVE('blockquote')
     break
     case '\n':
