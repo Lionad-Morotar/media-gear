@@ -1,5 +1,6 @@
 <template>
   <div id="navbar">
+    <i class="iconfont icon-windows white" />
   </div>
 </template>
 
@@ -11,9 +12,15 @@ export default {
 </script>
 
 <style lang="scss">
+$navbar-height: 40px;
 #navbar {
-  height: 50px;
-  line-height: 50px;
-  background:#304156;
+  padding: 0 15px;
+  height: $navbar-height;
+  line-height: $navbar-height;
+  background:#222;
+
+  .iconfont {
+    cursor: pointer;
+  }
 }
 </style>

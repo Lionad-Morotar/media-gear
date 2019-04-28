@@ -2,6 +2,7 @@
 
 @import './atom-css/flex.scss';
 @import './atom-css/box.scss';
+@import './atom-css/color.scss';
 @import './atom-css/font.scss';
 @import './atom-css/functional.scss';
 
@@ -42,13 +43,16 @@ h6 {
 
 
 /** ICONFONT */
-// TODO ICONFONT
 // @font-face {
+//   font-family: 'iconfont';  /* project id 1166007 */
+//   src: url('//at.alicdn.com/t/font_1166007_o1l0rpzrjkp.eot');
+//   src: url('//at.alicdn.com/t/font_1166007_o1l0rpzrjkp.eot?#iefix') format('embedded-opentype'),
+//   url('//at.alicdn.com/t/font_1166007_o1l0rpzrjkp.woff2') format('woff2'),
+//   url('//at.alicdn.com/t/font_1166007_o1l0rpzrjkp.woff') format('woff'),
+//   url('//at.alicdn.com/t/font_1166007_o1l0rpzrjkp.ttf') format('truetype'),
+//   url('//at.alicdn.com/t/font_1166007_o1l0rpzrjkp.svg#iconfont') format('svg');
 // }
-// .iconfont {
-//   display: inline-block;
-//   font-family: "iconfont";
-//   font-style: normal;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-// }
+@import url('//at.alicdn.com/t/font_1166007_1a3cjsy17f5.css');
+.iconfont {
+  font-size: 18px;
+}
