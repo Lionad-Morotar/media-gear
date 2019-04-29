@@ -1,3 +1,5 @@
+import log from '../utils/statusBarControl'
+
 const state = {
   active: false,
   search: ''
@@ -29,42 +31,29 @@ const actions = {
 
   /** active */
 
+  @log.flush('激活搜索')
   activeHelper ({ commit }) {
-    return new Promise((resolve) => {
-      commit('ACTIVE_HELPER')
-      resolve()
-    })
+    commit('ACTIVE_HELPER')
   },
-  inActiveHelper ({ commit }) {
-    return new Promise((resolve) => {
-      commit('INACTIVE_HELPER')
-      setTimeout(() => {
-        commit('CLEAR_SEARCH')
-        resolve()
-      }, 300)
-    })
+  @log.flush('关闭搜索')
+  deActiveHelper ({ commit }) {
+    commit('INACTIVE_HELPER')
+    setTimeout(() => {
+      commit('CLEAR_SEARCH')
+    }, 300)
   },
   toggleHelperActive ({ state, dispatch }) {
-    return new Promise((resolve) => {
-      Promise.all([
-        state.active
-          ? dispatch('inActiveHelper')
-          : dispatch('activeHelper')
-      ]).then(resolve)
-    })
+    state.active
+      ? dispatch('deActiveHelper')
+      : dispatch('activeHelper')
   },
 
   /** search */
 
   changeSearchContent ({ commit }, { val }) {
-    return new Promise((resolve, reject) => {
-      if (typeof val === 'string') {
-        commit('SET_SEARCH', val)
-        resolve()
-      } else {
-        reject(new Error('@store/actions/changeSearchContent 值类型不是字符串'))
-      }
-    })
+    if (typeof val === 'string') {
+      commit('SET_SEARCH', val)
+    }
   }
 
 }

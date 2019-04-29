@@ -47,11 +47,15 @@ export default {
 
 <style lang="scss">
 
+// TODO scss 全局变量
 #status-bar {
+  padding: 0 15px;
   height: 25px;
   line-height: 25px;
   border-top: solid 1px #d5d6d6;
   background: #efefef;
+  font-size: 12px;
+  color: #666;
   overflow: hidden;
 }
 

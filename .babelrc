@@ -24,7 +24,8 @@
           "modules": false
         }],
         "stage-0"
-      ]
+      ],
+      "plugins": ["transform-decorators-legacy"]
     },
     "web": {
       "presets": [
@@ -35,6 +36,8 @@
       ]
     }
   },
-  "plugins": ["transform-runtime"]
+  "plugins": [
+    "transform-runtime"
+  ]
 }
 

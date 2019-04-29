@@ -53,7 +53,7 @@ export default {
       {
         key: 'Escape',
         handler: () => {
-          this.$store.dispatch('inActiveHelper')
+          this.$store.dispatch('deActiveHelper')
         }
       }
     ])

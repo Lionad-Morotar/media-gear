@@ -4,7 +4,7 @@
       id="helper"
       class="fcc"
       v-show="active"
-      @click="$store.dispatch('inActiveHelper')"
+      @click="$store.dispatch('deActiveHelper')"
     >
 
       <input
