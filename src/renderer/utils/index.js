@@ -1,3 +1,5 @@
+import valid from './validator.js'
+
 export default {
 
   /** getRandomNumber
@@ -9,6 +11,8 @@ export default {
    */
   getRandomNumber (randomGap = 1000) {
     return +new Date() + ((Math.random() * randomGap).toFixed(0) + '')
-  }
+  },
+
+  valid
 
 }
