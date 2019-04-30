@@ -77,84 +77,83 @@ const validatorNameReflex = {
  * @param {Array, Regex} validItems 待校验的选项
  * @return {Boolean, String} 仅当`return true`时校验通过, 否则输出错误或报错信息
  */
-function Valy ({ rawValue, rawValidItems, debug }) {
-  Object.assign(this, {
-    validResult: null,
-    rawValue,
-    rawValidItems,
-    debug: debug || false
-  })
-}
-Valy.prototype.toValid = function (validItems) {
-  let validResult = 'unexcepted valid result'
-  validItems = validItems || this.rawValidItems
-
-  switch (typeof validItems) {
-    case 'function':
-      this.debug && console.log('function')
-      const result = validItems(this.rawValue)
-      if (['function', 'object'].includes(typeof result)) {
-        validResult = this.toValid(result)
-      } else {
-        validResult = result
-      }
-      break
-
-    case 'object':
-      this.debug && console.log('object')
-      if (Array.isArray(validItems)) {
-        validResult = validItems
-          .map(x => this.toValid(x))
-          .every(x => x === true)
-      } else if (validItems instanceof RegExp) {
-        validResult = validItems.test(this.rawValue)
-      } else {
-        throw new Error(`unsupported object type validItem : ${validItems}`)
-      }
-      break
-
-    case 'string':
-      this.debug && console.log('string')
-      const toFindHandle = validItems.split('?')
-      const toFindHandleName = toFindHandle[0]
-      const handle = validatorNameReflex[toFindHandleName]
-      if (!handle) {
-        throw new Error(`cant find validItem ${validItems} in validatorNameReflex`)
-      }
-      validResult = this.toValid(handle)
-      break
-
-    default:
-      throw new Error(`unsupported type of validItem : ${validItems}`)
+class Valy {
+  constructor ({ rawValue, rawValidItems, debug }) {
+    Object.assign(this, {
+      validResult: null,
+      rawValue,
+      rawValidItems,
+      debug: debug || false
+    })
   }
 
-  // TODO 在某些情况下可能要求抛出异常
-  // if (validResult !== true) {
-  //   throw new Error(validResult)
-  // }
-  // return true
-  return validResult
-}
+  toValid (validItems) {
+    let validResult = 'unexcepted valid result'
+    validItems = validItems || this.rawValidItems
 
-// 返回校验结果
-Valy.prototype.exec = function () {
-  this.validResult = this.toValid()
-  return this.validResult
-}
-// 对值进行格式化
+    switch (typeof validItems) {
+      case 'function':
+        this.debug && console.log('function')
+        const result = validItems(this.rawValue)
+        if (['function', 'object'].includes(typeof result)) {
+          validResult = this.toValid(result)
+        } else {
+          validResult = result
+        }
+        break
 
-Valy.prototype.format = function (fn = _ => _) {
-  this.rawValue = fn(this.rawValue)
-  return this
-}
-// 返回校验结果
-Valy.prototype.exec = function () {
-  this.validResult = this.toValid()
-  return this.validResult
-}
-// 返回判断检验结果是否为某一特定的值
-Valy.prototype.check = function (checkResult = true) {
-  return this.validResult === checkResult
+      case 'object':
+        this.debug && console.log('object')
+        if (Array.isArray(validItems)) {
+          validResult = validItems
+            .map(x => this.toValid(x))
+            .every(x => x === true)
+        } else if (validItems instanceof RegExp) {
+          validResult = validItems.test(this.rawValue)
+        } else {
+          throw new Error(`unsupported object type validItem : ${validItems}`)
+        }
+        break
+
+      case 'string':
+        this.debug && console.log('string')
+        const toFindHandle = validItems.split('?')
+        const toFindHandleName = toFindHandle[0]
+        const handle = validatorNameReflex[toFindHandleName]
+        if (!handle) {
+          throw new Error(`cant find validItem ${validItems} in validatorNameReflex`)
+        }
+        validResult = this.toValid(handle)
+        break
+
+      default:
+        throw new Error(`unsupported type of validItem : ${validItems}`)
+    }
+
+    // TODO 在某些情况下可能要求抛出异常
+    // if (validResult !== true) {
+    //   throw new Error(validResult)
+    // }
+    // return true
+    return validResult
+  }
+
+  // 对值进行格式化
+  format (fn = _ => _) {
+    this.rawValue = fn(this.rawValue)
+    return this
+  }
+
+  // 返回校验结果
+  exec () {
+    this.validResult = this.toValid()
+    return this.validResult
+  }
+
+  // 返回判断检验结果是否为某一特定的值
+  check (checkResult = true) {
+    return this.validResult === checkResult
+  }
 }
 
 console.log(
