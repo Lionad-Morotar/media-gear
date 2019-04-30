@@ -79,12 +79,24 @@ const validatorNameReflex = {
  */
 class Valy {
   constructor ({ rawValue, rawValidItems, debug }) {
-    Object.assign(this, {
-      validResult: null,
-      rawValue,
-      rawValidItems,
-      debug: debug || false
-    })
+    const arg = arguments[0]
+    if (arg instanceof Object) {
+      Object.assign(this, {
+        pass: false,
+        validResult: null,
+        rawValue,
+        rawValidItems,
+        debug: debug || false
+      })
+    } else {
+      Object.assign(this, {
+        pass: false,
+        validResult: null,
+        rawValue: arg,
+        rawValidItems,
+        debug: false
+      })
+    }
   }
 
   toValid (validItems) {
@@ -94,7 +106,7 @@ class Valy {
     switch (typeof validItems) {
       case 'function':
         this.debug && console.log('function')
-        const result = validItems(this.rawValue)
+        const result = validItems(this.rawValue || {})
         if (['function', 'object'].includes(typeof result)) {
           validResult = this.toValid(result)
         } else {
@@ -138,6 +150,15 @@ class Valy {
     return validResult
   }
 
+  // 主动调用校验
+  valid (validItems) {
+    if (this.pass) return this
+    if (!(this.validResult = this.toValid(validItems))) {
+      this.pass = true
+    }
+    return this
+  }
+
   // 对值进行格式化
   format (fn = _ => _) {
     this.rawValue = fn(this.rawValue)
@@ -151,13 +172,15 @@ class Valy {
   }
 
   // 返回判断检验结果是否为某一特定的值
-  check (checkResult = true) {
-    return this.validResult === checkResult
+  check (assertResult = true) {
+    return this.validResult === assertResult
   }
 }
 
 console.log(
-  new Valy({rawValue: 'a1111', rawValidItems: 'username'}).format().exec()
+  new Valy({rawValue: 'a1111', rawValidItems: 'username'}).format().exec(),
+  new Valy('a1111').valid('email').valid('username').valid('username').valid('username').check(),
+  new Valy('a1111').valid(['username', _ => _.length === 5]).check()
 )
 
 // TODO test case
