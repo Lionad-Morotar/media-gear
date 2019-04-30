@@ -34,6 +34,7 @@ const comm = {
 }
 
 // 内置的校验器
+// TODO 可配置的内置校验器
 const validatorNameReflex = {
 
   /** social media */
@@ -73,27 +74,43 @@ const validatorNameReflex = {
   url: /^((https?|ftp|file):\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w.-]*)*\/?$/
 }
 
-/**
- * @param {Array, Regex} validItems 待校验的选项
- * @return {Boolean, String} 仅当`return true`时校验通过, 否则输出错误或报错信息
+/** Valy
+ * @description Valy校验器, 可以使用两种方式调用:
+ *  1. new Valy('a1111', 'username').result
+ *  2. new Valy('a1111').valid(['username', _ => _.length === 5]).check()
+ * @param {Any} rawValue 待校验的值
+ * @param {Array, Regex, Function} validItems 待校验的选项
+ * @param {Boolean} debug 打开调试会时会打开一些log信息
  */
 class Valy {
-  constructor ({ rawValue, rawValidItems, debug }) {
-    const arg = arguments[0]
-    if (arg instanceof Object) {
+  // TODO 构造器也许可以更简洁?
+  constructor ({ rawValue, rawValidItems, debug = false }) {
+    const argLen = arguments.length
+    const arg1 = arguments[0]
+    const arg2 = arguments[1]
+    if (arg1 instanceof Object) {
       Object.assign(this, {
         pass: false,
         result: null,
         rawValue,
         rawValidItems,
-        debug: debug || false
+        debug
+      })
+      this.exec()
+    } else if (argLen === 2) {
+      Object.assign(this, {
+        pass: false,
+        result: null,
+        rawValue: arg1,
+        rawValidItems: arg2,
+        debug
       })
       this.exec()
     } else {
       Object.assign(this, {
         pass: false,
         result: null,
-        rawValue: arg,
+        rawValue: arg1,
         rawValidItems,
         debug: false
       })
@@ -103,10 +120,11 @@ class Valy {
   toValid (validItems) {
     let toValidResult = 'unexcepted valid result'
     validItems = validItems || this.rawValidItems
+    this.debug && console.log(validItems)
 
     switch (typeof validItems) {
       case 'function':
-        this.debug && console.log('function')
+        this.debug && console.log('valid items type : function')
         const fnResult = validItems(this.rawValue || {})
         if (['function', 'object'].includes(typeof fnResult)) {
           toValidResult = this.toValid(fnResult)
@@ -116,7 +134,7 @@ class Valy {
         break
 
       case 'object':
-        this.debug && console.log('object')
+        this.debug && console.log('valid items type : object')
         if (Array.isArray(validItems)) {
           toValidResult = validItems
             .map(x => this.toValid(x))
@@ -129,7 +147,7 @@ class Valy {
         break
 
       case 'string':
-        this.debug && console.log('string')
+        this.debug && console.log('valid items type : string')
         const toFindHandle = validItems.split('?')
         const toFindHandleName = toFindHandle[0]
         const handle = validatorNameReflex[toFindHandleName]
@@ -169,6 +187,7 @@ class Valy {
   // 返回校验结果
   exec () {
     this.result = this.toValid()
+    // console.log(this.result)
     return this.result
   }
 
@@ -179,9 +198,9 @@ class Valy {
 }
 
 console.log(
-  new Valy({rawValue: 'a1111', rawValidItems: 'username'}).result,
-  new Valy('a1111').valid('email').valid('username').valid('username').valid('username').check(),
-  new Valy('a1111').valid(['username', _ => _.length === 5]).check()
+  new Valy('a1111', 'username').result, // true
+  new Valy('a1111').valid('email').valid('username').valid('username').valid('username').check(), // false
+  new Valy('a1111').valid(['username', _ => _.length === 5]).check() // true
 )
 
 // TODO test case
