@@ -83,15 +83,16 @@ class Valy {
     if (arg instanceof Object) {
       Object.assign(this, {
         pass: false,
-        validResult: null,
+        result: null,
         rawValue,
         rawValidItems,
         debug: debug || false
       })
+      this.exec()
     } else {
       Object.assign(this, {
         pass: false,
-        validResult: null,
+        result: null,
         rawValue: arg,
         rawValidItems,
         debug: false
@@ -100,28 +101,28 @@ class Valy {
   }
 
   toValid (validItems) {
-    let validResult = 'unexcepted valid result'
+    let toValidResult = 'unexcepted valid result'
     validItems = validItems || this.rawValidItems
 
     switch (typeof validItems) {
       case 'function':
         this.debug && console.log('function')
-        const result = validItems(this.rawValue || {})
-        if (['function', 'object'].includes(typeof result)) {
-          validResult = this.toValid(result)
+        const fnResult = validItems(this.rawValue || {})
+        if (['function', 'object'].includes(typeof fnResult)) {
+          toValidResult = this.toValid(fnResult)
         } else {
-          validResult = result
+          toValidResult = fnResult
         }
         break
 
       case 'object':
         this.debug && console.log('object')
         if (Array.isArray(validItems)) {
-          validResult = validItems
+          toValidResult = validItems
             .map(x => this.toValid(x))
             .every(x => x === true)
         } else if (validItems instanceof RegExp) {
-          validResult = validItems.test(this.rawValue)
+          toValidResult = validItems.test(this.rawValue)
         } else {
           throw new Error(`unsupported object type validItem : ${validItems}`)
         }
@@ -135,7 +136,7 @@ class Valy {
         if (!handle) {
           throw new Error(`cant find validItem ${validItems} in validatorNameReflex`)
         }
-        validResult = this.toValid(handle)
+        toValidResult = this.toValid(handle)
         break
 
       default:
@@ -143,17 +144,17 @@ class Valy {
     }
 
     // TODO 在某些情况下可能要求抛出异常
-    // if (validResult !== true) {
-    //   throw new Error(validResult)
+    // if (toValidResult !== true) {
+    //   throw new Error(toValidResult)
     // }
     // return true
-    return validResult
+    return toValidResult
   }
 
   // 主动调用校验
   valid (validItems) {
     if (this.pass) return this
-    if (!(this.validResult = this.toValid(validItems))) {
+    if (!(this.result = this.toValid(validItems))) {
       this.pass = true
     }
     return this
@@ -167,18 +168,18 @@ class Valy {
 
   // 返回校验结果
   exec () {
-    this.validResult = this.toValid()
-    return this.validResult
+    this.result = this.toValid()
+    return this.result
   }
 
   // 返回判断检验结果是否为某一特定的值
   check (assertResult = true) {
-    return this.validResult === assertResult
+    return this.result === assertResult
   }
 }
 
 console.log(
-  new Valy({rawValue: 'a1111', rawValidItems: 'username'}).format().exec(),
+  new Valy({rawValue: 'a1111', rawValidItems: 'username'}).result,
   new Valy('a1111').valid('email').valid('username').valid('username').valid('username').check(),
   new Valy('a1111').valid(['username', _ => _.length === 5]).check()
 )
