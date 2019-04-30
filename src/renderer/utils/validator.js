@@ -46,7 +46,7 @@ const validatorNameReflex = {
   username_cn ({ min = 2, max = 8 }) {
     return new RegExp(`^[a-zA-Z\\u4E00-\\u9FA5][a-zA-Z0-9\\u4E00-\\u9FA5_-]{${min - 1},${max - 1}}$`)
   },
-  // 油箱
+  // 邮箱
   email () {
     return new RegExp(`^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,6})$`)
   },
