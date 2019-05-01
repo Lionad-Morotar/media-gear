@@ -1,15 +1,8 @@
 <template>
   <div class="home-page max">
 
-    <window loading>
-      <p>aosdifjas;odfjia;sodifj</p>
-      <p>aosdifjas;odfjia;sodifj</p>
-      <p>aosdifjas;odfjia;sodifj</p>
-      <p>aosdifjas;odfjia;sodifj</p>
-      <p>aosdifjas;odfjia;sodifj</p>
-      <p>aosdifjas;odfjia;sodifj</p>
-      <p>aosdifjas;odfjia;sodifj</p>
-      <!-- <mdEditor :options="{ value: content }" /> -->
+    <window fullbody>
+      <mdEditor :options="{ value: content }" />
     </window>
 
   </div>

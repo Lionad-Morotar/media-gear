@@ -73,6 +73,7 @@ export default {
 #app {
   display: block;
   font-size: 14px;
+  overflow: hidden;
   cursor: normal;
 }
 </style>

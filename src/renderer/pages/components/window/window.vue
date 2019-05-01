@@ -4,12 +4,12 @@
     <div
       v-if="render"
       v-show="visible"
-      class="window-body fss-c"
+      class="window-body"
       :style="styles.windowBody"
     >
 
       <!-- 头部 -->
-      <header class="header fsbc">
+      <header class="header fsbc fs0">
         <div v-if="step">
           <i class="iconfont icon-double-right"></i>
           <span class="title">{{step}}</span>
@@ -31,7 +31,7 @@
       </header>
 
       <!-- 躯干 -->
-      <section class="main fss-c" :style="styles.modalContentBodyStyle">
+      <section class="main fss-c" :style="fullbody ? styles.main.fullbody : ''">
         <slot></slot>
       </section>
 
@@ -51,6 +51,7 @@ export default {
     // TODO 全局窗口状态管理 用来处理 zindex
     width: { type: [String, Number], default: null },
     height: { type: [String, Number], default: null },
+    fullbody: { type: Boolean, default: false },
 
     // 配置属性
     render: { type: Boolean, default: true },
@@ -65,14 +66,10 @@ export default {
     return {
       showLoading: false,
       styles: {
-        modalContentBodyStyle: {
-          width: '100%',
-          padding: this.padding,
-          minHeight: this.height || 'auto',
-          backgroundColor: '#fff',
-          boxShadow: this.boxShadow,
-          borderRadius: this.borderRadius,
-          transition: '.3s'
+        main: {
+          fullbody: {
+            padding: '25px 0 0 0'
+          }
         }
       }
     }
@@ -96,13 +93,17 @@ export default {
   position: absolute;
   top: 100px;
   left: 100px;
-  width: 500px;
-  height: 500px;
+  width: 1000px;
+  height: 700px;
   border: solid .5px #5c5c5c;
   background: #fff;
+  overflow: hidden;
 }
 
 .header {
+  position: absolute;
+  top: 0;
+  left: 0;
   padding: 3px 3px;
   width: 100%;
   height: 25px;
@@ -137,6 +138,11 @@ export default {
 
 .main {
   padding: 10px;
+  padding-top: 35px;
+  width: 100%;
+  height: 100%;
+  // overflow-x: hidden;
+  // overflow-y: scroll;
 }
 
 .fade-enter-active, .fade-leave-active {
