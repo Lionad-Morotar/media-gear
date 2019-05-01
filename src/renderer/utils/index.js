@@ -1,4 +1,5 @@
-import valid from './validator.js'
+import valid from './validator'
+import localStorage from './storage'
 
 export default {
 
@@ -13,6 +14,7 @@ export default {
     return +new Date() + ((Math.random() * randomGap).toFixed(0) + '')
   },
 
-  valid
+  valid,
+  localStorage
 
 }
