@@ -72,5 +72,7 @@ export default {
 <style lang="scss">
 #app {
   display: block;
+  font-size: 14px;
+  cursor: normal;
 }
 </style>

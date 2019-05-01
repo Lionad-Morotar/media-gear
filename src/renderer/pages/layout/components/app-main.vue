@@ -8,7 +8,8 @@
 
 <script>
 export default {
-  name: 'app-main-components',
+  // 这一层打算主要用作缓存
+  name: 'app-main-cmpt',
   computed: {
     key () {
       return this.$route.fullPath
@@ -22,7 +23,6 @@ export default {
   height: calc(100vh - 65px);
   width: 100%;
   position: relative;
-  overflow-y: scroll;
 }
 </style>
 

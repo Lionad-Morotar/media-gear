@@ -15,14 +15,14 @@
 
 <script>
 
-import navbar from './components/navbar'
+import Navbar from './components/navbar'
 import AppMain from './components/app-main'
 import StatusBar from './components/status-bar'
 
 export default {
   name: 'layout-components',
   components: {
-    navbar,
+    Navbar,
     AppMain,
     StatusBar
   }

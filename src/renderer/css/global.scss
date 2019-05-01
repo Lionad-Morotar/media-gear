@@ -40,6 +40,9 @@ h5,
 h6 {
   margin: 0;
 }
+span {
+  vertical-align: text-bottom;
+}
 
 
 /** ICONFONT */
@@ -52,7 +55,9 @@ h6 {
 //   url('//at.alicdn.com/t/font_1166007_o1l0rpzrjkp.ttf') format('truetype'),
 //   url('//at.alicdn.com/t/font_1166007_o1l0rpzrjkp.svg#iconfont') format('svg');
 // }
-@import url('//at.alicdn.com/t/font_1166007_1a3cjsy17f5.css');
+@import url('//at.alicdn.com/t/font_1166007_fqiskgppbus.css');
 .iconfont {
-  font-size: 18px;
+  font-size: 16px;
+  vertical-align: text-bottom;
+  cursor: pointer;
 }
