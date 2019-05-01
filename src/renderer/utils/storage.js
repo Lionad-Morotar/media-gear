@@ -2,7 +2,7 @@
  * 更加便捷的操作 localStorage
  */
 
-const store = ('window' in this) && window.localStorage ? null : {}
+const store = ('window' in (this || {})) && window.localStorage ? null : {}
 
 const Storage = {
   get (key) {

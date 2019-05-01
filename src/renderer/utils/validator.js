@@ -82,7 +82,7 @@ const validatorNameReflex = {
  * @param {Array, Regex, Function} validItems 待校验的选项
  * @param {Boolean} debug 打开调试会时会打开一些log信息
  */
-class Valy {
+export default class Valy {
   // TODO 构造器也许可以更简洁?
   constructor ({ rawValue, rawValidItems, debug = false }) {
     const argLen = arguments.length
@@ -197,21 +197,9 @@ class Valy {
   }
 }
 
-console.log(
-  new Valy('a1111', 'username').result, // true
-  new Valy('a1111').valid('email').valid('username').valid('username').valid('username').check(), // false
-  new Valy('a1111').valid(['username', _ => _.length === 5]).check() // true
-)
-
 // TODO test case
-// 验证内置校验器是否正常
-// console.log(willValid('a1111', 'username'))
-// 验证函数校验器是否正常
-// console.log(willValid('a1111', _ => true))
-// console.log(willValid('a1111', _ => false))
-// 验证数据校验器是否正常
-// console.log(willValid('a1111', ['username']))
-// console.log(willValid('a1111', [_ => true]))
-// console.log(willValid('a1111', [_ => true, _ => false]))
-
-// export default willValid
+// console.log(
+//   new Valy('a1111', 'username').result, // true
+//   new Valy('a1111').valid('email').valid('username').valid('username').valid('username').check(), // false
+//   new Valy('a1111').valid(['username', _ => _.length === 5]).check() // true
+// )

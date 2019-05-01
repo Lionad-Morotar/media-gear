@@ -8,8 +8,8 @@ class MGearWindow {
 
   constructor (path) {
     const conf = {
-      height: 768,
-      width: 1366
+      height: 1000,
+      width: 1700
     }
     this.window = new BrowserWindow(conf)
     this.registerWindowEvents()
