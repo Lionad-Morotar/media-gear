@@ -1,9 +1,11 @@
 <template>
   <div class="home-page max">
 
-    <window fullbody>
-      <mdEditor :options="{ value: content }" />
-    </window>
+    <template v-if="activeWindow">
+      <window :win="activeWindow">
+        <components :is="activeWindow.is" :data="{ toParsed: content }" />
+      </window>
+    </template>
 
   </div>
 </template>
@@ -15,7 +17,7 @@ import mdEditor from './components/mdEditor'
 import mdExample from './components/mdEditor/demo.md.js'
 
 export default {
-  name: 'markdown-demo',
+  name: 'home-page',
   components: {
     Window,
     mdEditor
@@ -24,6 +26,26 @@ export default {
     return {
       content: mdExample
     }
+  },
+  computed: {
+    windows () {
+      return this.$store.getters.windows
+    },
+    activeWindow () {
+      console.log(this.$store.getters.activeWindow)
+      return this.$store.getters.activeWindow
+    }
+  },
+  mounted () {
+    this.$store.dispatch('createMadrosWindow', {
+      config: {
+        is: 'mdEditor',
+        title: 'TEditor',
+        top: 50
+      }
+    }).then(newWin => {
+      this.$store.dispatch('activeMadrosWindow', newWin)
+    })
   }
 }
 </script>

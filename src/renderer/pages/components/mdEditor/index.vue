@@ -31,7 +31,7 @@ import { parse } from '@/utils/suites/teditor'
 const basicOptions = {}
 
 export default {
-  name: 't-editor',
+  name: 't-editor-app',
   props: {
 
     // 编辑器ID
@@ -43,10 +43,12 @@ export default {
     },
 
     // 扩充选项
-    options: {
+    data: {
       type: Object,
       default () {
-        return {}
+        return {
+          toParsed: ''
+        }
       }
     }
   },
@@ -65,7 +67,7 @@ export default {
 
   computed: {
     innerOptions () {
-      const options = Object.assign({}, basicOptions, this.options)
+      const options = Object.assign({}, basicOptions, this.data)
 
       return options
     }
@@ -95,9 +97,9 @@ export default {
     /** LIFE CIRCLE FUNC */
 
     initEditor () {
-      const { value } = this.innerOptions
+      const { toParsed } = this.innerOptions
 
-      value && this.setValue(value)
+      toParsed && this.setValue(toParsed)
     },
 
     /** LOGIC FUNC */

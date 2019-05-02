@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
-    <noscript>You need to enable the urrr~~~ JavaScript to run this app.</noscript>
+  <div id="madros">
+    <noscript>You need to enable the fucrrr~~~ JavaScript to run madros.</noscript>
 
-    <!-- app -->
+    <!-- madros -->
     <router-view />
 
     <!-- externals -->
@@ -70,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
+#madros {
   display: block;
   font-size: 14px;
   overflow: hidden;
