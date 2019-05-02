@@ -3,6 +3,9 @@ import localStorage from './storage'
 
 export default {
 
+  valid,
+  localStorage,
+
   /** getRandomNumber
    *  返回一个随机数字
    *
@@ -34,7 +37,11 @@ export default {
     e.stopPropagation && e.stopPropagation()
   },
 
-  valid,
-  localStorage
+  /** 打印原型链 */
+  protoChain (object) {
+    const p = Object.getPrototypeOf(object)
+    console.log(p)
+    return p === null || this.protoChain(p)
+  }
 
 }
