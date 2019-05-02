@@ -147,7 +147,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  padding: 3px 3px;
+  padding: 0 3px;
   width: 100%;
   height: 25px;
   line-height: 25px;
