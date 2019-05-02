@@ -1,12 +1,6 @@
 <template>
   <transition name="fade">
-
-    <div
-      v-if="render"
-      v-show="visible"
-      class="window-body"
-      :style="styles.windowBody"
-    >
+    <div v-if="render" v-show="visible" class="window-body" :style="styles.body">
 
       <!-- 头部 -->
       <header class="header fsbc fs0">
@@ -24,53 +18,56 @@
         </div>
 
         <span class="right">
-          <i class="iconfont icon-minus" @click="$emit('onClose')"></i>
-          <i class="iconfont icon-screen-square" @click="$emit('onClose')"></i>
+          <i class="iconfont icon-minus" @click="$emit('onMini')"></i>
+          <i class="iconfont icon-screen-square" @click="$emit('onFullScreen')"></i>
           <i class="iconfont icon-times" @click="$emit('onClose')"></i>
         </span>
       </header>
 
       <!-- 躯干 -->
-      <section class="main fss-c" :style="fullbody ? styles.main.fullbody : ''">
+      <section class="main fss-c" :style="styles.main">
         <slot></slot>
       </section>
 
     </div>
-
   </transition>
 </template>
 
 <script>
+import utils from '@/utils'
+
+const HEADER_HEIGHT = 25
+
 export default {
   props: {
-    // DOM基础
-    id: {
-      type: [String, Number],
-      default: _ => +String(Math.random() * new Date().getTime()).split('.')[0]
-    },
-    // TODO 全局窗口状态管理 用来处理 zindex
-    width: { type: [String, Number], default: null },
-    height: { type: [String, Number], default: null },
-    fullbody: { type: Boolean, default: false },
-
-    // 配置属性
     render: { type: Boolean, default: true },
     visible: { type: Boolean, default: true },
-
-    // 信息
-    title: { type: String, default: '新窗口' },
-    step: { type: String, default: '' },
-    loading: { type: Boolean, default: false }
+    win: { type: Object, required: true }
   },
   data () {
     return {
       showLoading: false,
+      title: this.win.title,
+      step: this.win.step,
+      loading: this.win.loading,
       styles: {
-        main: {
-          fullbody: {
-            padding: '25px 0 0 0'
-          }
-        }
+        body: {
+          width: utils.toPX(this.win.width),
+          height: utils.toPX(this.win.height),
+          top: utils.toPX(this.win.top),
+          left: utils.toPX(this.win.left)
+        },
+        main: Object.assign(
+          {
+            padding: utils.toPX(10),
+            paddingTop: utils.toPX(10 + HEADER_HEIGHT)
+          },
+          // TODO 这种写法太惨
+          this.win.fullbody ? {
+            padding: utils.toPX(0),
+            paddingTop: utils.toPX(HEADER_HEIGHT)
+          } : {}
+        )
       }
     }
   },
@@ -91,10 +88,6 @@ export default {
 <style lang="scss" scoped>
 .window-body {
   position: absolute;
-  top: 100px;
-  left: 100px;
-  width: 1000px;
-  height: 700px;
   border: solid .5px #5c5c5c;
   background: #fff;
   overflow: hidden;
@@ -137,8 +130,6 @@ export default {
 }
 
 .main {
-  padding: 10px;
-  padding-top: 35px;
   width: 100%;
   height: 100%;
   // overflow-x: hidden;

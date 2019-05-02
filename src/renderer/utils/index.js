@@ -14,6 +14,18 @@ export default {
     return +new Date() + ((Math.random() * randomGap).toFixed(0) + '')
   },
 
+  /** toPX pxTransform
+   *  将输入的数字转化为像素单位
+   */
+  toPX (input) {
+    switch (typeof input) {
+      case 'number':
+        input = '' + input
+        break
+    }
+    return input + 'px'
+  },
+
   valid,
   localStorage
 

@@ -32,7 +32,6 @@ export default {
       return this.$store.getters.windows
     },
     activeWindow () {
-      console.log(this.$store.getters.activeWindow)
       return this.$store.getters.activeWindow
     }
   },
@@ -41,6 +40,7 @@ export default {
       config: {
         is: 'mdEditor',
         title: 'TEditor',
+        fullbody: true,
         top: 50
       }
     }).then(newWin => {
