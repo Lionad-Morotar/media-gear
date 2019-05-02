@@ -100,7 +100,6 @@ export default {
         const offsetY = +e.clientY - mouseStartY
         const fixedX = offsetX + mouseDownWinLeft
         const fixedY = offsetY + mouseDownWinTop
-        console.log(offsetX, offsetY, fixedX, fixedY)
         this.setNotOverBoard(fixedX, fixedY)
       }
 
@@ -157,6 +156,8 @@ export default {
   cursor: move;
 
   .right {
+    cursor: pointer;
+
     .iconfont {
       margin-left: 3px;
     }
