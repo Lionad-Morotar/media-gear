@@ -28,12 +28,10 @@ const mutations = {
   NEXT_STATUS_BAR_TASK (state, val) {
     const lastContent = state.content
     state.history.push(lastContent)
-    console.log('asdfasdf')
     state.content = state.task.shift()
   },
   SET_STATUS_BAR_CONTENT (state, val) {
     state.history.push(val)
-    console.log('asdfasdf2')
     state.content = val
   }
 
