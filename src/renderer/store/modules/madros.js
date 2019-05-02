@@ -23,6 +23,17 @@ const mutations = {
     if (state.activeWindow === win) {
       state.activeWindow = null
     }
+  },
+
+  /** window property setting */
+
+  SET_MADROS_WINDOW_TOP (state, { win, top }) {
+    const targetWin = win || state.activeWindow
+    targetWin.top = top
+  },
+  SET_MADROS_WINDOW_LEFT (state, { win, left }) {
+    const targetWin = win || state.activeWindow
+    targetWin.left = left
   }
 
 }
@@ -37,7 +48,7 @@ const actions = {
         commit('ACTIVE_MADROS_WINDOW', newWin)
         resolve()
       } else {
-        reject(new Error('$activeMadrosWindow : window is not an instance of Window'))
+        reject(new Error('window is not an instance of Window'))
       }
     })
   },
@@ -54,6 +65,20 @@ const actions = {
   },
   delMadrosWindow ({ commit }, { window }) {
     commit('DEL_MADROS_WINDOW', window)
+  },
+
+  /** window property setting */
+
+  setMadrosWindowTopLeft ({ commit }, { win, top, left }) {
+    return new Promise((resolve, reject) => {
+      if (!isNaN(top) && !isNaN(left)) {
+        commit('SET_MADROS_WINDOW_TOP', { win, top })
+        commit('SET_MADROS_WINDOW_LEFT', { win, left })
+        resolve()
+      } else {
+        reject(new Error('top or left is NaN'))
+      }
+    })
   }
 
 }

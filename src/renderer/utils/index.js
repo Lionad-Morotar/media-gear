@@ -26,6 +26,14 @@ export default {
     return input + 'px'
   },
 
+  /** canselEvent
+   *  取消默认事件同时取消事件传播
+   */
+  canselEvent (e) {
+    e.preventDefault && e.preventDefault()
+    e.stopPropagation && e.stopPropagation()
+  },
+
   valid,
   localStorage
 

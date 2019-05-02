@@ -1,9 +1,9 @@
 <template>
   <transition name="fade">
-    <div v-if="render" v-show="visible" class="window-body" :style="styles.body">
+    <div v-if="render" v-show="visible" class="window-body" :style="bodyStyles">
 
       <!-- 头部 -->
-      <header class="header fsbc fs0">
+      <header class="header fsbc fs0" @mousedown="handleDragStart">
         <div v-if="step">
           <i class="iconfont icon-double-right"></i>
           <span class="title">{{step}}</span>
@@ -26,7 +26,7 @@
 
       <!-- 躯干 -->
       <section class="main fss-c" :style="styles.main">
-        <slot></slot>
+        <slot />
       </section>
 
     </div>
@@ -51,12 +51,6 @@ export default {
       step: this.win.step,
       loading: this.win.loading,
       styles: {
-        body: {
-          width: utils.toPX(this.win.width),
-          height: utils.toPX(this.win.height),
-          top: utils.toPX(this.win.top),
-          left: utils.toPX(this.win.left)
-        },
         main: Object.assign(
           {
             padding: utils.toPX(10),
@@ -71,6 +65,18 @@ export default {
       }
     }
   },
+  computed: {
+    bodyStyles: {
+      get () {
+        return {
+          width: utils.toPX(this.win.width),
+          height: utils.toPX(this.win.height),
+          top: utils.toPX(this.win.top),
+          left: utils.toPX(this.win.left)
+        }
+      }
+    }
+  },
   watch: {
     loading (nv, ov) {
       if (ov && !nv) {
@@ -80,6 +86,50 @@ export default {
       } else {
         this.showLoading = nv
       }
+    }
+  },
+  methods: {
+    handleDragStart (e) {
+      const mouseStartX = e.clientX
+      const mouseStartY = e.clientY
+      const mouseDownWinTop = this.win.top
+      const mouseDownWinLeft = this.win.left
+
+      const onMouseMove = e => {
+        const offsetX = +e.clientX - mouseStartX
+        const offsetY = +e.clientY - mouseStartY
+        const fixedX = offsetX + mouseDownWinLeft
+        const fixedY = offsetY + mouseDownWinTop
+        console.log(offsetX, offsetY, fixedX, fixedY)
+        this.setNotOverBoard(fixedX, fixedY)
+      }
+
+      const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove)
+        document.removeEventListener('mouseup', onMouseUp)
+      }
+
+      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', onMouseUp)
+      utils.canselEvent(e)
+    },
+    setNotOverBoard (fixedX, fixedY) {
+      this.$store.dispatch(
+        'setMadrosWindowTopLeft',
+        this.fixXYIfOverBoard(fixedX, fixedY)
+      )
+    },
+    fixXYIfOverBoard (x = 0, y = 0) {
+      // TODO 存入Vuex
+      const electronWinWidth = window.screen.availWidth
+      const electronWinHeight = window.screen.availHeight
+      const maxWidth = electronWinWidth - this.win.width
+      const maxHeight = electronWinHeight - this.win.height
+      x = x < 0 ? 0 : x
+      x = x > maxWidth ? maxWidth : x
+      y = y < 0 ? 0 : y
+      y = y > maxHeight ? maxHeight : y
+      return { left: x, top: y }
     }
   }
 }
@@ -91,6 +141,7 @@ export default {
   border: solid .5px #5c5c5c;
   background: #fff;
   overflow: hidden;
+  // transition: .3s;
 }
 
 .header {
@@ -103,6 +154,7 @@ export default {
   line-height: 25px;
   text-align: left;
   background-color: #f5f5f5;
+  cursor: move;
 
   .right {
     .iconfont {
