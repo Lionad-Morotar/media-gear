@@ -4,7 +4,7 @@
       <i class="iconfont icon-windows white" />
     </div>
     <template v-for="window in windows">
-      <div class="win-item">
+      <div class="win-item" @click="toggleMinimized(window)">
         <span class="item-title">{{window.title}}</span>
       </div>
     </template>
@@ -21,6 +21,11 @@ export default {
     },
     activeWindow () {
       return this.$store.getters.activeWindow
+    }
+  },
+  methods: {
+    toggleMinimized (window) {
+      this.$store.dispatch('setMadrosWindowMinimized', { win: window, val: !window.minimized })
     }
   }
 }
@@ -41,6 +46,7 @@ $bgc-light: #444;
     flex-shrink: 0;
     height: $height;
     line-height: $height;
+    cursor: pointer;
   }
 
   .win-icon {

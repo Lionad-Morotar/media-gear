@@ -26,13 +26,19 @@ export default class Window {
   changeWindowVisibleState (name, val) {
     const handler = {
       fullScreenInBody: {
-        true: () => {
-          toFullScreen()
-        },
-        false: () => {
-          toNormal()
-        }
+        true: () => toFullScreen(),
+        false: () => toNormal()
+      },
+      minimized: {
+        true: () => toMinimize(),
+        false: () => toUnMinimize()
       }
+    }
+    const toMinimize = () => {
+      this.minimized = true
+    }
+    const toUnMinimize = () => {
+      this.minimized = false
     }
     const toFullScreen = () => {
       this.fullScreenInBody = true

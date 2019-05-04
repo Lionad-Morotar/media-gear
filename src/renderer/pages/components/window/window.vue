@@ -19,9 +19,9 @@
 
         <!-- TODO 事件代理 -->
         <span class="right">
-          <i class="iconfont icon-minus" @click.stop="$emit('onMini')"></i>
-          <i class="iconfont icon-screen-square" @click.stop="toggleFullScreenInBodyState"></i>
-          <i class="iconfont icon-times" @click.stop="$emit('onClose')"></i>
+          <i class="iconfont icon-minus" @click.stop="toggleMinimized"></i>
+          <i class="iconfont icon-screen-square" @click.stop="toggleFullScreenInBody"></i>
+          <!-- <i class="iconfont icon-times" @click.stop="$emit('onClose')"></i> -->
         </span>
       </header>
 
@@ -69,18 +69,35 @@ export default {
   computed: {
     bodyStyles: {
       get () {
-        const fullScreenInBody = this.win.fullScreenInBody
-        return fullScreenInBody ? {
-          width: '100%',
-          height: '100%',
-          top: 0,
-          left: 0
-        } : {
-          width: utils.toPX(this.win.width),
-          height: utils.toPX(this.win.height),
-          top: utils.toPX(this.win.top),
-          left: utils.toPX(this.win.left)
+        const stylesToMatch = {
+          minimized: () => {
+            return this.win.minimized ? {
+              display: 'none'
+            } : false
+          },
+          fullScreenInBody: () => {
+            return this.win.fullScreenInBody ? {
+              width: '100%',
+              height: '100%',
+              top: 0,
+              left: 0
+            } : false
+          },
+          default: () => {
+            return {
+              width: utils.toPX(this.win.width),
+              height: utils.toPX(this.win.height),
+              top: utils.toPX(this.win.top),
+              left: utils.toPX(this.win.left)
+            }
+          }
         }
+        const pattern = ['default', 'fullScreenInBody', 'minimized']
+        let result = null
+        while (!result) {
+          result = stylesToMatch[pattern.pop()]()
+        }
+        return result
       }
     }
   },
@@ -99,9 +116,11 @@ export default {
 
     /** screen event */
 
-    toggleFullScreenInBodyState () {
+    toggleMinimized () {
+      this.$store.dispatch('setMadrosWindowMinimized', { val: !this.win.minimized })
+    },
+    toggleFullScreenInBody () {
       this.$store.dispatch('setMadrosWindowFullScreenInBody', { val: !this.win.fullScreenInBody })
-      this.$emit('onFullScreen')
     },
 
     /** drag event */
