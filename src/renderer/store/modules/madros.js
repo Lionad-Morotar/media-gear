@@ -37,7 +37,7 @@ const mutations = {
   },
   SET_MADROS_WINDOW_FULL_SCREEN_IN_BODY (state, { win, val }) {
     const targetWin = win || state.activeWindow
-    targetWin.fullScreenInBody = val
+    targetWin.changeWindowVisibleState('fullScreenInBody', val)
   }
 
 }
