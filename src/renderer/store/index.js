@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { createPersistedState } from 'vuex-electron'
+// import { createPersistedState } from 'vuex-electron'
 
 import modules from './modules'
 import getters from './getters'
@@ -13,7 +13,8 @@ const MGearStore = new Vuex.Store({
   modules,
   getters,
   plugins: [
-    createPersistedState()
+    // disabled and unnecessary, avoid tricky problems from vuex
+    // createPersistedState()
     // ! disable to fix issue: https://github.com/SimulatedGREG/electron-vue/issues/794
     // createSharedMutations()
   ],
