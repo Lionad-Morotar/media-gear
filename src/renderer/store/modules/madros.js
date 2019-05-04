@@ -34,6 +34,10 @@ const mutations = {
   SET_MADROS_WINDOW_LEFT (state, { win, left }) {
     const targetWin = win || state.activeWindow
     targetWin.left = left
+  },
+  SET_MADROS_WINDOW_FULL_SCREEN_IN_BODY (state, { win, val }) {
+    const targetWin = win || state.activeWindow
+    targetWin.fullScreenInBody = val
   }
 
 }
@@ -79,6 +83,9 @@ const actions = {
         reject(new Error('top or left is NaN'))
       }
     })
+  },
+  setMadrosWindowFullScreenInBody ({ commit }, { win, val }) {
+    commit('SET_MADROS_WINDOW_FULL_SCREEN_IN_BODY', { win, val })
   }
 
 }

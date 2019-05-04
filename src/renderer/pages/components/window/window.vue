@@ -17,10 +17,11 @@
           <span class="title">{{title}}</span>
         </div>
 
+        <!-- TODO 事件代理 -->
         <span class="right">
-          <i class="iconfont icon-minus" @click="$emit('onMini')"></i>
-          <i class="iconfont icon-screen-square" @click="$emit('onFullScreen')"></i>
-          <i class="iconfont icon-times" @click="$emit('onClose')"></i>
+          <i class="iconfont icon-minus" @click.stop="$emit('onMini')"></i>
+          <i class="iconfont icon-screen-square" @click.stop="toggleFullScreenInBodyState"></i>
+          <i class="iconfont icon-times" @click.stop="$emit('onClose')"></i>
         </span>
       </header>
 
@@ -68,7 +69,13 @@ export default {
   computed: {
     bodyStyles: {
       get () {
-        return {
+        const fullScreenInBody = this.win.fullScreenInBody
+        return fullScreenInBody ? {
+          width: '100%',
+          height: '100%',
+          top: 0,
+          left: 0
+        } : {
           width: utils.toPX(this.win.width),
           height: utils.toPX(this.win.height),
           top: utils.toPX(this.win.top),
@@ -89,6 +96,16 @@ export default {
     }
   },
   methods: {
+
+    /** screen event */
+
+    toggleFullScreenInBodyState () {
+      this.$store.dispatch('setMadrosWindowFullScreenInBody', { val: !this.win.fullScreenInBody })
+      this.$emit('onFullScreen')
+    },
+
+    /** drag event */
+
     handleDragStart (e) {
       const mouseStartX = e.clientX
       const mouseStartY = e.clientY
