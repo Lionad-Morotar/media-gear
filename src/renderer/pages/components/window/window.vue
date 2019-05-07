@@ -173,6 +173,7 @@ export default {
 <style lang="scss" scoped>
 .window-body {
   position: absolute;
+  padding: .5px;
   border: solid .5px #5c5c5c;
   background: #fff;
   overflow: hidden;
@@ -184,7 +185,7 @@ export default {
   top: 0;
   left: 0;
   padding: 0 3px;
-  width: 100%;
+  width: 99.9%;
   height: 25px;
   line-height: 25px;
   text-align: left;
