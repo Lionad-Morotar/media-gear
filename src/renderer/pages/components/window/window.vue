@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div v-if="render" v-show="visible" class="window-body" :style="bodyStyles">
+    <div v-show="win && render" class="window-body" :style="bodyStyles">
 
       <!-- 头部 -->
       <header class="header fsbc fs0" @mousedown="handleDragStart">
@@ -41,12 +41,11 @@ const HEADER_HEIGHT = 25
 
 export default {
   props: {
-    render: { type: Boolean, default: true },
-    visible: { type: Boolean, default: true },
     win: { type: Object, required: true }
   },
   data () {
     return {
+      render: true,
       showLoading: false,
       title: this.win.title,
       step: this.win.step,
@@ -69,11 +68,20 @@ export default {
   computed: {
     bodyStyles: {
       get () {
+        const stylesToMatchSideEffects = {
+          minimized: () => {
+            this.render = false
+          },
+          fullScreenInBody: () => {
+            this.render = true
+          },
+          default: () => {
+            this.render = true
+          }
+        }
         const stylesToMatch = {
           minimized: () => {
-            return this.win.minimized ? {
-              display: 'none'
-            } : false
+            return this.win.minimized ? {} : false
           },
           fullScreenInBody: () => {
             return this.win.fullScreenInBody ? {
@@ -94,9 +102,23 @@ export default {
         }
         const pattern = ['default', 'fullScreenInBody', 'minimized']
         let result = null
+        let mathed = null
         while (!result) {
-          result = stylesToMatch[pattern.pop()]()
+          result = stylesToMatch[mathed = pattern.pop()]()
+          // 虽然minimized状态下, DOM节点被v-show接管,
+          // 但返回的样式应该是minimized上一优先级状态下的样式
+          // 这样的话, width height 之类的属性不会被修改,
+          // 使得transition的动画内, window不会形变
+          if (mathed === 'minimized' && result) {
+            let lastResult = null
+            while (!lastResult) {
+              lastResult = stylesToMatch[pattern.pop()]()
+            }
+            result = lastResult
+          }
         }
+        console.assert(!pattern.includes(mathed), '获取窗口样式出错', mathed)
+        stylesToMatchSideEffects[mathed]()
         return result
       }
     }
@@ -226,14 +248,14 @@ export default {
   // overflow-y: scroll;
 }
 
-.fade-enter-active, .fade-leave-active {
-  opacity: .5;
-  transition: 0.3s;
+.fade-enter-active,
+.fade-leave-active {
+  opacity: 1;
+  transition: .1s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
-  -webkit-transform: scale(1.02);
-  transform: scale(1.02);
-  transition: 0.3s;
+  transform: scale(.94);
 }
 </style>

@@ -41,6 +41,7 @@ export default {
         is: 'mdEditor',
         title: 'TEditor',
         fullbody: true,
+        fullScreenInBody: true,
         top: 50
       }
     }).then(newWin => {
