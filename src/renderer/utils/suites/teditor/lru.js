@@ -25,18 +25,19 @@ function Node (config) {
 Node.prototype.linkPrev = function (prevNode) {
   prevNode.linkNext(this)
 }
+// 将当前节点的next指向另一节点 linkNextTo
 Node.prototype.linkNext = function (nextNode) {
-  // TODO anti memo leak
+  // TODO anti memory leak
   this.next = nextNode
   nextNode.prev = this
 }
-
+// 将当前节点插入某一结点后 insertAfterNode
 Node.prototype.insertAfter = function (prevNode) {
   const prevNextNode = prevNode.next
   prevNode.linkNext(this)
   this.linkNext(prevNextNode)
 }
-
+// 删除当前节点, 除非节点是头节点/尾节点
 Node.prototype.unLink = function () {
   const prev = this.prev
   const next = this.next
@@ -50,9 +51,11 @@ Node.prototype.unLink = function () {
 
 /** LRU prototype */
 
+// 通过key判断缓存中是否有某元素
 LRU.prototype.has = function (key) {
   return !!this.nodeMemo[key]
 }
+// 通过key获取缓存中某一元素值
 LRU.prototype.get = function (key) {
   let handle = this.nodeMemo[key]
   if (handle) {
@@ -62,6 +65,7 @@ LRU.prototype.get = function (key) {
     throw new Error(`Key : ${key} is not fount in LRU Nodes`)
   }
 }
+// 通过key获取缓存中某一元素权重
 LRU.prototype.getNodeWeight = function (key) {
   let handle = this.nodeMemo[key]
   if (handle) {
@@ -70,7 +74,7 @@ LRU.prototype.getNodeWeight = function (key) {
     throw new Error(`Key : ${key} is not fount in LRU Nodes`)
   }
 }
-
+// 添加新的缓存元素
 LRU.prototype.set = function (key, val) {
   const handleNode = this.nodeMemo[key]
   if (handleNode) {
@@ -89,7 +93,7 @@ LRU.prototype.set = function (key, val) {
     newNode.insertAfter(this.tailNode.prev)
   }
 }
-
+// 打印缓存中全部节点
 LRU.prototype.showAllNodes = function () {
   let next = this.headNode.next
   while (next && next.next) {
@@ -97,6 +101,7 @@ LRU.prototype.showAllNodes = function () {
     next = next.next
   }
 }
+// 对某一元素进行加权操作
 LRU.prototype.addNodeWeight = function (node, w = 1) {
   const handle = node
   let prev = handle.prev
