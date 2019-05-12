@@ -36,17 +36,19 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('createMadrosWindow', {
-      config: {
-        is: 'mdEditor',
-        title: 'TEditor',
-        fullbody: true,
-        fullScreenInBody: true,
-        top: 50
-      }
-    }).then(newWin => {
-      this.$store.dispatch('activeMadrosWindow', newWin)
-    })
+    if (!this.windows.find(x => x.is === 'mdEditor')) {
+      this.$store.dispatch('createMadrosWindow', {
+        config: {
+          is: 'mdEditor',
+          title: 'TEditor',
+          fullbody: true,
+          fullScreenInBody: true,
+          top: 50
+        }
+      }).then(newWin => {
+        this.$store.dispatch('activeMadrosWindow', newWin)
+      })
+    }
   }
 }
 </script>

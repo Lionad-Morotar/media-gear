@@ -12,6 +12,7 @@
         class="helper-input"
         type="text"
         v-model="search"
+        @keyup.enter="handleSearch"
       />
 
     </div>
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-
+// TODO 搜索提示
 export default {
   name: 'helper',
   computed: {
@@ -42,6 +43,16 @@ export default {
         this.$store.dispatch('changeSearchContent', { val })
       }
     }
+  },
+  methods: {
+    handleSearch () {
+      const search = this.search
+      switch (search) {
+        default:
+          console.log(search)
+          break
+      }
+    }
   }
 }
 </script>
@@ -56,6 +67,8 @@ export default {
   background-color: rgba(0,0,0,.25);
 }
 .helper-input {
+  position: relative;
+  top: -10vh;
   padding: 0 .5em;
   width: 30vw;
   min-width: 400px;

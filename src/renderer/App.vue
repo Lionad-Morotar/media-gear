@@ -38,6 +38,7 @@ export default {
   },
 
   created () {
+    this.startOS()
     this.$_setTriggerKey({
       type: [
         'intercept-all',
@@ -60,6 +61,11 @@ export default {
   },
 
   methods: {
+
+    // 启动时应该针对 persistedState 做一些处理
+    startOS () {
+      this.$store.dispatch('flushMadrosWindows')
+    },
 
     closeHelper () {
       this.visible.helper = false

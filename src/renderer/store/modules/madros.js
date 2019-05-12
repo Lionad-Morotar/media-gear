@@ -24,6 +24,10 @@ const mutations = {
       state.activeWindow = null
     }
   },
+  FLUSH_MADROS_WINDOWS (state) {
+    state.windows = []
+    state.activeWindow = null
+  },
 
   /** window property setting */
 
@@ -73,6 +77,9 @@ const actions = {
   },
   delMadrosWindow ({ commit }, { window }) {
     commit('DEL_MADROS_WINDOW', window)
+  },
+  flushMadrosWindows ({commit}) {
+    commit('FLUSH_MADROS_WINDOWS')
   },
 
   /** window property setting */
