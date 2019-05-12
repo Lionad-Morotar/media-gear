@@ -9,36 +9,35 @@ class VX {
   }
   watch (key, fn, obj = this.store) {
     Dep.watcher = fn
-    console.log(obj[key])
+    const segments = key.split('.')
+    while (segments.length) {
+      obj = obj[segments.shift()]
+    }
     Dep.watcher = null
   }
   set (key, val, obj = this.store) {
-    if (!obj.hasOwnProperty(key)) {
-      if (typeof val === 'object' && !(val instanceof Array)) {
-        Object.entries(val).map(entry => {
-          const [k, v] = entry
-          this.set(k, v, val)
-        })
-      }
-      const dep = new Dep()
-      Object.defineProperty(obj, key, {
-        enumerable: true,
-        configurable: true,
-        get: () => {
-          dep.collect()
-          return val
-        },
-        set: newVal => {
-          if (newVal === val) {
-            return
-          }
-          dep.notify(newVal, val)
-          val = newVal
-        }
+    if (typeof val === 'object' && !(val instanceof Array)) {
+      Object.entries(val).map(entry => {
+        const [k, v] = entry
+        this.set(k, v, val)
       })
-    } else {
-      console.warn('Object alreay has this key : ', obj, key, ' VX will do nothing.')
     }
+    const dep = new Dep()
+    Object.defineProperty(obj, key, {
+      enumerable: true,
+      configurable: true,
+      get: () => {
+        dep.collect()
+        return val
+      },
+      set: newVal => {
+        if (newVal === val) {
+          return
+        }
+        dep.notify(newVal, val)
+        val = newVal
+      }
+    })
   }
 }
 
