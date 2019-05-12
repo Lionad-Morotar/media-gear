@@ -9,7 +9,8 @@
 
 <script>
 
-import vx from '@/utils/suites/vx'
+import VX from '@/utils/suites/vx'
+const vx = new VX()
 
 export default {
   name: 'playground-app',
