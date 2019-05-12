@@ -26,6 +26,9 @@ export default {
   },
   mounted () {
     vx.store.value = '123123'
+    setTimeout(() => {
+      vx.store.value = '123123321'
+    }, 1500)
   },
   destroyed () {
     vx.delAllSub('value')
