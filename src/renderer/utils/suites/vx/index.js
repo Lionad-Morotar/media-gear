@@ -16,12 +16,34 @@ class VX {
     Dep.watcher = null
   }
   set (key, val, obj = this.store) {
+    /** 对象值链 */
+    const segments = key.split('.')
+    while (segments.length > 1) {
+      const handleKey = segments.shift()
+      const handleVal = obj[handleKey]
+      if (typeof handleVal === 'object') {
+        obj = handleVal
+      } else if (!handleVal) {
+        obj = (
+          key = handleKey,
+          obj[handleKey] = {},
+          obj[handleKey]
+        )
+      } else {
+        console.warn('already has val')
+      }
+    }
+    key = segments[0]
+
+    /** walk */
     if (typeof val === 'object' && !(val instanceof Array)) {
       Object.entries(val).map(entry => {
         const [k, v] = entry
         this.set(k, v, val)
       })
     }
+
+    /** defineProperty */
     const dep = new Dep()
     Object.defineProperty(obj, key, {
       enumerable: true,
