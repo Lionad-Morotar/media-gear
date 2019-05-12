@@ -193,6 +193,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// TODO 也许window.vue改用网格布局更好?
+
 .window-body {
   position: absolute;
   padding: .5px;
