@@ -8,9 +8,9 @@ class VX {
     this.store = Store.createStore()
   }
   watch (key, fn, obj = this.store) {
-    Dep.watcher.hook = fn
+    Dep.watcher = fn
     console.log(obj[key])
-    Dep.watcher.hook = null
+    Dep.watcher = null
   }
   set (key, val, obj = this.store) {
     if (typeof val === 'object' && !(val instanceof Array)) {
@@ -28,7 +28,7 @@ class VX {
           dep.collect()
           return val
         },
-        set: (newVal) => {
+        set: newVal => {
           if (newVal === val) {
             return
           }

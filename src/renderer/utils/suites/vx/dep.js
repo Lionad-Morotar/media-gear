@@ -1,7 +1,5 @@
 let depID = 1
-let watcher = {
-  hook: null
-}
+let watcher = null
 
 class Dep {
   constructor () {
@@ -19,7 +17,7 @@ class Dep {
   clear () {
     this.subs.length = 0
   }
-  collect (fn = watcher.hook) {
+  collect (fn = watcher) {
     if (fn && !this.subs.find(x => x === fn)) {
       this.addSub(fn)
     }
@@ -29,6 +27,16 @@ class Dep {
   }
 }
 
-Dep.watcher = watcher
+// 如果不使用打包工具的话, 这样写要比 Dep.watcher.val 的形式舒服些
+Object.defineProperty(Dep, 'watcher', {
+  enumerable: false,
+  configurable: true,
+  get: () => {
+    return watcher
+  },
+  set: newWather => {
+    watcher = newWather
+  }
+})
 
 export default Dep
