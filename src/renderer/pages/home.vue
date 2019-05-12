@@ -1,9 +1,9 @@
 <template>
   <div class="home-page max">
 
-    <template v-if="activeWindow">
-      <window :win="activeWindow">
-        <components :is="activeWindow.is" :data="{ toParsed: content }" />
+    <template v-for="window in windows">
+      <window :win="window">
+        <components :is="window.is" :data="{ toParsed: content }" />
       </window>
     </template>
 
@@ -13,14 +13,18 @@
 <script>
 
 import Window from './components/window/window'
-import mdEditor from './components/mdEditor'
-import mdExample from './components/mdEditor/demo.md.js'
+
+// TODO app 做成页面用router加载 比组件的形式好, 动态组件不适合做这玩意儿
+import playground from './apps/playground'
+import mdEditor from './apps/mdEditor'
+import mdExample from './apps/mdEditor/demo.md.js'
 
 export default {
   name: 'home-page',
   components: {
     Window,
-    mdEditor
+    mdEditor,
+    playground
   },
   data () {
     return {
@@ -43,6 +47,17 @@ export default {
           title: 'TEditor',
           fullbody: true,
           fullScreenInBody: true,
+          top: 50
+        }
+      }).then(newWin => {
+        this.$store.dispatch('activeMadrosWindow', newWin)
+      })
+    }
+    if (!this.windows.find(x => x.is === 'playground')) {
+      this.$store.dispatch('createMadrosWindow', {
+        config: {
+          is: 'playground',
+          title: '随便玩玩',
           top: 50
         }
       }).then(newWin => {

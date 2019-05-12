@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" class="t-editor">
+  <div :id="id" class="t-editor-app">
 
     <div class="wrapper fss max">
       <textarea
@@ -159,7 +159,7 @@ export default {
 @import url('./css/basic.scss');
 @import url('./css/main-theme.scss');
 
-.t-editor {
+.t-editor-app {
   width: 100%;
   height: 100%;
 

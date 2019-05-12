@@ -47,6 +47,9 @@ export default {
   methods: {
     handleSearch () {
       const search = this.search
+
+      // TODO 通过helper快速启动windows
+      // 具体的window启动可能需要做成DI的形式
       switch (search) {
         default:
           console.log(search)

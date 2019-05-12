@@ -139,10 +139,10 @@ export default {
     /** screen event */
 
     toggleMinimized () {
-      this.$store.dispatch('setMadrosWindowMinimized', { val: !this.win.minimized })
+      this.$store.dispatch('setMadrosWindowMinimized', { val: !this.win.minimized, win: this.win })
     },
     toggleFullScreenInBody () {
-      this.$store.dispatch('setMadrosWindowFullScreenInBody', { val: !this.win.fullScreenInBody })
+      this.$store.dispatch('setMadrosWindowFullScreenInBody', { val: !this.win.fullScreenInBody, win: this.win })
     },
 
     /** drag event */
