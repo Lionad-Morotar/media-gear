@@ -22,6 +22,7 @@ export default {
   },
   created () {
     vx.set('surface')
+    vx.set('surface')
     vx.watch('surface', _ => {
       this.surface = _
     })

@@ -57,7 +57,7 @@ export default {
       this.$store.dispatch('createMadrosWindow', {
         config: {
           is: 'playground',
-          title: '随便玩玩',
+          title: 'PLAY_GROUND',
           top: 50
         }
       }).then(newWin => {

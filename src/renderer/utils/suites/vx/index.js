@@ -13,13 +13,13 @@ class VX {
     Dep.watcher = null
   }
   set (key, val, obj = this.store) {
-    if (typeof val === 'object' && !(val instanceof Array)) {
-      Object.entries(val).map(entry => {
-        const [k, v] = entry
-        this.set(k, v, val)
-      })
-    }
-    if (!this.store[key]) {
+    if (!obj.hasOwnProperty(key)) {
+      if (typeof val === 'object' && !(val instanceof Array)) {
+        Object.entries(val).map(entry => {
+          const [k, v] = entry
+          this.set(k, v, val)
+        })
+      }
       const dep = new Dep()
       Object.defineProperty(obj, key, {
         enumerable: true,
@@ -36,6 +36,8 @@ class VX {
           val = newVal
         }
       })
+    } else {
+      console.warn('Object alreay has this key : ', obj, key, ' VX will do nothing.')
     }
   }
 }
