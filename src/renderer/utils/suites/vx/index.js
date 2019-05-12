@@ -7,31 +7,34 @@ class VX {
   constructor () {
     this.store = Store.createStore()
   }
-  addSub (key, fn) {
+  watch (key, fn) {
     this.store.$dep[key].collect(fn)
   }
-  set (key, val) {
+  set (key, val, obj = this.store) {
+    if (typeof val === 'object' && !(val instanceof Array)) {
+      Object.entries(val).map(entry => {
+        const [k, v] = entry
+        this.set(k, v, val)
+      })
+    }
     if (!this.store[key]) {
-      const dep = new Dep()
-      this.store.$dep[key] = dep
-      Object.defineProperty(this.store, key, {
+      const dep = this.store.$dep[key] = new Dep()
+      Object.defineProperty(obj, key, {
         enumerable: true,
         configurable: true,
         get: () => {
           dep.collect()
-          return this.store.$value[key]
+          return val
         },
         set: (newVal) => {
-          const oldValue = this.store.$value[key]
-          if (newVal === oldValue) {
+          if (newVal === val) {
             return
           }
-          dep.notify(newVal, oldValue)
-          this.store.$value[key] = newVal
+          dep.notify(newVal, val)
+          val = newVal
         }
       })
     }
-    this.store[key] = val
   }
 }
 
