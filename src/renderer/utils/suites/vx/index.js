@@ -48,14 +48,18 @@ export function set (key, val, formater) {
     Object.defineProperty(store, key, {
       enumerable: true,
       configurable: true,
-      set (newVal) {
-        callWatcher(newVal)
-        store.$value[key] = newVal
-      },
       get () {
         return callFormater
           ? callFormater(store.$value[key])
           : store.$value[key]
+      },
+      set (newVal) {
+        const lastValue = store.$value[key]
+        if (newVal === lastValue) {
+          return
+        }
+        callWatcher(newVal)
+        store.$value[key] = newVal
       }
     })
   }
