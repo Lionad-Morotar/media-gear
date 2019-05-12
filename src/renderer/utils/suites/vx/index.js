@@ -3,8 +3,12 @@
 import Store from './store'
 import Dep from './dep'
 
+let VXID = 1
+let handleDep = null
+
 class VX {
   constructor () {
+    this.id = VXID++
     this.store = Store.createStore()
   }
   watch (key, fn, obj = this.store) {
@@ -34,7 +38,6 @@ class VX {
       }
     }
     key = segments[0]
-
     /** walk */
     if (typeof val === 'object' && !(val instanceof Array)) {
       Object.entries(val).map(entry => {
@@ -42,14 +45,14 @@ class VX {
         this.set(k, v, val)
       })
     }
-
     /** defineProperty */
     const dep = new Dep()
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
       get: () => {
-        dep.collect()
+        handleDep = dep
+        handleDep.collect()
         return val
       },
       set: newVal => {
@@ -61,8 +64,18 @@ class VX {
       }
     })
   }
-  // del () {
-  // }
+  del (key, obj = this.store) {
+    const segments = key.split('.')
+    let deepObj = obj
+    while (segments.length) {
+      deepObj = deepObj[segments.shift()]
+      handleDep.clear()
+    }
+    delete obj[key]
+  }
+  delAll (obj = this.store) {
+    Object.keys(obj).map(key => this.del(key))
+  }
 }
 
 export default VX

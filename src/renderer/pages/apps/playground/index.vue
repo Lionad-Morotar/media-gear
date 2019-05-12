@@ -39,20 +39,25 @@ export default {
     })
   },
   mounted () {
-    vx.store.surface = '1'
-    vx.store.value.a.b = 'a'
-    vx.store.value.a.c = 'c1'
-    vx.store.value.a.d.val = 'd1'
-    setTimeout(() => {
-      vx.store.surface = '2'
-      vx.store.value.a.b = 'b'
-      vx.store.value.a.c = 'c2'
-      vx.store.value.a.d.val = 'd2'
-      console.log(vx.store)
-    }, 1500)
+    this.showReactive()
   },
   destroyed () {
-    // vx.delAllSub('value')
+    vx.delAll()
+  },
+  methods: {
+    showReactive () {
+      vx.store.surface = '1'
+      vx.store.value.a.b = 'a'
+      vx.store.value.a.c = 'c1'
+      vx.store.value.a.d.val = 'd1'
+      setTimeout(() => {
+        vx.store.surface = '2'
+        vx.store.value.a.b = 'b'
+        vx.store.value.a.c = 'c2'
+        vx.store.value.a.d.val = 'd2'
+        console.log(vx.store)
+      }, 1500)
+    }
   }
 }
 </script>

@@ -58,6 +58,7 @@ $bgc-light: #444;
   }
 
   .win-item {
+    padding: 0 30px;
     min-width: 100px;
     background: $bgc-light;
     text-align: center;
