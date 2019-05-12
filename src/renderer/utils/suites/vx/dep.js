@@ -1,4 +1,7 @@
 let depID = 1
+let watcher = {
+  hook: null
+}
 
 class Dep {
   constructor () {
@@ -16,7 +19,7 @@ class Dep {
   clear () {
     this.subs.length = 0
   }
-  collect (fn) {
+  collect (fn = watcher.hook) {
     if (fn && !this.subs.find(x => x === fn)) {
       this.addSub(fn)
     }
@@ -25,5 +28,7 @@ class Dep {
     this.subs.forEach(func => func(newVal, oldVal))
   }
 }
+
+Dep.watcher = watcher
 
 export default Dep

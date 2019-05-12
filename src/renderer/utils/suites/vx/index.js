@@ -7,8 +7,10 @@ class VX {
   constructor () {
     this.store = Store.createStore()
   }
-  watch (key, fn) {
-    this.store.$dep[key].collect(fn)
+  watch (key, fn, obj = this.store) {
+    Dep.watcher.hook = fn
+    console.log(obj[key])
+    Dep.watcher.hook = null
   }
   set (key, val, obj = this.store) {
     if (typeof val === 'object' && !(val instanceof Array)) {
@@ -18,7 +20,7 @@ class VX {
       })
     }
     if (!this.store[key]) {
-      const dep = this.store.$dep[key] = new Dep()
+      const dep = new Dep()
       Object.defineProperty(obj, key, {
         enumerable: true,
         configurable: true,

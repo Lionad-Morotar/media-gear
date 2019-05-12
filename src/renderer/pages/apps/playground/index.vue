@@ -26,6 +26,7 @@ export default {
       this.surface = _
     })
     // vx.set('value', { value: 1 })
+    // // TODO vx.set('value.value2')
     // vx.watch('value.value', _ => {
     //   this.value = _
     // })

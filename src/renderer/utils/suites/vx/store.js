@@ -1,7 +1,5 @@
 function createStore (wrapper, key) {
-  const newStore = {
-    $dep: {}
-  }
+  const newStore = {}
   if (wrapper && key) {
     wrapper.key = newStore
     return wrapper
