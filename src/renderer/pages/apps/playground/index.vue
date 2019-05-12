@@ -25,18 +25,17 @@ export default {
     vx.watch('surface', _ => {
       this.surface = _
     })
-    vx.set('value', { value: 1 })
-    // TODO vx.set('value.value2')
-    vx.watch('value.value', _ => {
+    vx.set('value', { a: { b: '' } })
+    vx.watch('value.a.b', _ => {
       this.value = _
     })
   },
   mounted () {
     vx.store.surface = '1'
-    vx.store.value.value = '123123'
+    vx.store.value.a.b = 'a'
     setTimeout(() => {
       vx.store.surface = '2'
-      vx.store.value.value = '321321'
+      vx.store.value.a.b = 'b'
       console.log(vx.store)
     }, 1500)
   },

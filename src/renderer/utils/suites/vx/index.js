@@ -39,6 +39,8 @@ class VX {
       }
     })
   }
+  // del () {
+  // }
 }
 
 export default VX
