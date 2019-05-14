@@ -59,10 +59,11 @@ class VX {
         if (newVal === val) {
           return
         }
-        dep.notify(newVal, val)
         val = newVal
+        dep.notify(newVal, val)
       }
     })
+    return dep
   }
   del (key, obj = this.store) {
     const segments = key.split('.')
