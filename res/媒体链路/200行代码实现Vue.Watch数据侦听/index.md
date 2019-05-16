@@ -4,7 +4,7 @@
 
 在小程序项目中, 我们的通常会使用到使用到一个全局对象作为各个页面通用的数据存储容器, 将它绑定到app对象后, 就能在每一个页面都自由的操纵这个对象. 然而在实践中, 由于这个对象及其属性不具备响应式条件, 它不能直接参与业务逻辑的编写, 能力仅仅局限于数据储存. 若是在VueJS项目中, 我们可能经常使用到`Vue.$watch`去侦听某个数据是否发生变化, 小程序却缺乏这种能力.
 
-在这篇文章中, 我将用150行代码, 手把手带你打造一个小程序也可以使用的侦听器VX:
+在这篇文章中, 我将用150行代码, 手把手带你打造一个小程序也可以使用的侦听器(下简称VX):
 
 ```JS
 // 一个快速赋值的语法糖函数, 可以创建结构为 { value: a { b: { val: ''} } } 的对象
@@ -33,14 +33,9 @@ class Dep {
   constructor () {
     this.subs = []
   }
+  // 将回调添加到数组中
   addSub (fn) { /*...*/ }
   delSub (fn) { /*...*/ }
-  // 将回调添加到数组中
-  collect (fn) {
-    if (fn && !this.subs.find(x => x === fn)) {
-      this.addSub(fn)
-    }
-  }
   // 执行数组中每一项函数
   notify (newVal, oldVal) {
     this.subs.forEach(func => func(newVal, oldVal))
@@ -131,33 +126,227 @@ valueDep.addSub(() => { console.log('value changed!') })
 
 > 构思这种东西有一个特点，那就是它会导致更多的构思。你有没有注意过，坐下来写东西的时候，一半的构思是写作时产生的？
 
-## 隐藏Dep
+### 隐藏Dep
 
-
-这些内容应和外部是解耦的. 首先一点, 我们创建一个侦听器类, 用于封装我们侦听所用到的所有方法, 同时, 它内含一个对象作为页面状态储存的容器
+这些内容应和外部是解耦的. 首先一点, 我们创建一个侦听器类, 用于封装我们侦听所用到的所有方法, 它包含了我们想要的全局对象以及操作它的方法(如watch,set):
 
 ```JS
 class VX {
   constructor () {
-    this.store = createStore()
+    this.store = Object.create(null)
   }
-  watch (key, fn, obj) {}
-  set (key, val, obj) {}
+  watch (key, fn, obj = this.store) {}
+  set (key, val, options = {}, obj = this.store) {}
+}
+const vx = new VX()
+```
+
+我们可以在watch中给对象某个属性添加回调, 就不用去直接操作Dep依赖数组了. 只是, 我们在业务代码中调用watch, 要怎么去获取obj.key对应的dep呢?
+
+我们设置一个全局的depHandler, 在obj.key的getter中主动将depHandler设置为当前obj.key的dep实例, 那么我们在watch函数里, 只要用任意操作触发obj.key的getter, 就能通过depHandler得到它的dep实例了, 代码形如:
+
+```diff
++ // 一开始没有持有dep实例
++ let handleDep = null
+  class VX {
+    watch (key, fn, obj = this.store) {
++     console.log(obj.key) // 使用任意操作触发obj.key的getter, 那么handleDep将自动引用obj.key的dep实例
++     handleDep.addSub(fn)
+    }
+    set (key, val, options = {}, obj = this.store) {
+      const dep = new Dep()
+      Object.defineProperty(obj, key, {
+        enumerable: true,
+        configurable: true,
+        get: () => {
++         handleDep = dep
+          return val
+        },
+        set: newVal => {}
+      })
+    }
+  }
+```
+
+### 主动收集依赖
+
+我们增加`handleDep.addSub(fn)`添加回调函数的逻辑, 其实可以直接放到getter中, 首先在Dep类中封装一个'主动'收集依赖的`collect`方法, 他会将全局`handleFn`存放到订阅数组中, 这样一来, 在watch函数中, 我们只要触发obj.key的getter, 就可以主动收集依赖了:
+
+```JS
+let handleFn = null
+class Dep {
+  addSub (fn) {}
+  delSub (fn) {}
+  clear () {}
+  collect (fn = handleFn) {
+    if (fn && !this.subs.find(x => x === fn)) {
+      this.addSub(fn)
+    }
+  }
+  notify (newVal, oldVal) {}
 }
 
-function createStore () {
-  const newStore = Object.create(null)
-  return newStore
+let handleDep = null
+class VX {
+  watch (key, fn, obj = this.store) {
+    handleFn = fn
+    console.log(obj.key)
+  }
+  set (key, val, options = {}, obj = this.store) {
+    const dep = new Dep()
+    Object.defineProperty(obj, key, {
+      enumerable: true,
+      configurable: true,
+      get: () => {
+        handleDep = dep
+        handleDep.collect()
+        return val
+      },
+      set: newVal => {}
+    })
+  }
 }
 ```
 
-我们的VX对象, 
+## 处理key值为对象链的情况
 
-为了实现这一点, 我们仿照VueJS中思路, 使用一个全局的对象
+在先前的watch函数中, 我们使用console.log(obj.key)去触发对应属性的getter, 如果我们调用方式是`watch('a.b.c')`就无能为力了. 这里我们封装一个通用方法, 用于处理对象链字符串的形式:
+
+```JS
+// 通过将字符串'a.b'分割为['a', 'b'], 再使用一个while循环就可以走完这个对象链
+function walkChains (key, obj) {
+  const segments = key.split('.')
+  let deepObj = obj
+  while (segments.length) {
+    deepObj = deepObj[segments.shift()]
+  }
+}
+class VX {
+  watch (key, fn, obj = this.store) {
+    handleFn = fn
+    walkChains(key, obj)
+  }
+}
+```
+
+在set方法中处理对象链字符串稍微有些不同, 因为如果`set('a.b')`时, 没有在我们全局对象中找到a属性, 这里应该抛错.
+
+实际的处理中, 需要推断'obj.a'以及'obj.a.b'是否存在. 假设没有'obj.a', 那么我们应该创建一个新的对象, 并且给新的对象添加属性'b', 所以代码类似`walkChains`函数, 只是稍作一层判断:
+
+```JS
+set (key, val, obj) {
+  const segments = key.split('.')
+  // 这里需要注意, 我们只处理到倒数第二个属性
+  while (segments.length > 1) {
+    const handleKey = segments.shift()
+    const handleVal = obj[handleKey]
+    // 存在'obj.a'的情况
+    if (typeof handleVal === 'object') {
+      obj = handleVal
+    // 不存在'obj.a'则给a属性赋一个非响应式的对象
+    } else if (!handleVal) {
+      obj = (
+        key = handleKey,
+        obj[handleKey] = {},
+        obj[handleKey]
+      )
+    } else {
+      console.trace('already has val')
+    }
+  }
+  // 最后一个属性要手动赋值
+  key = segments[0]
+}
+```
+
+## 业务场景应用
+
+### 小程序跨页面刷新数据
+
+我们经常碰到在小程序中由A页面跳转到B页面, 如果B页面进行了一些操作, 希望A页面自动刷新数据的情况. 但是由于A页面跳转到B页面不同(也许是redirect,也许是navigate), 处理方法也不尽相同.
+
+使用navigate方式跳转后, A页面不会被注销, 所以我们一般会通过全局对象去贮存A页面实例(也就是A页面的this对象), 然后在B页面直接调用相应的方法(如A.refreshList())进行刷新操作.
+
+引入VX后, 我们可以在`onload`生命周期直接调用watch方法添加订阅:
+
+```JS
+// app.js
+import VX from '@/utils/suites/vx'
+const vx = new VX()
+app.vx = vx
+app.store = vx.store
+app.vx.set('userType', '商户')
+
+// page a
+onLoad () {
+  app.vx.watch('userType', userType => {
+    if (userType === '商户') {
+      // ...
+    } else if (userType === '管理员') {
+      // ...
+    }
+  }, {
+    immediate: true
+  })
+}
+
+// page b
+switchUserType () {
+  app.store.userType = '管理员'
+}
+```
+
+## 可能遇到的问题
+
+### 给watch方法添加的函数设置立即执行
+
+有的时候我们希望通过watch添加函数的同时还立即执行该函数一次, 这个时候我们需要再定义额外的参数传递到watch中. 问题是这个函数不一定是同步函数.
+
+简单处理如下:
+
+```JS
+class VX {
+  async watch (key, fn, options = { immediately: false }, obj = this.store) {
+    handleDep = fn
+    walkChains(key, obj)
+    options.immediately && await fn(options.defaultParams)
+  }
+}
+```
+
+### this绑定丢失问题
+
+在我在对VX进行删除属性方法的扩展时, 我往walkChain函数中添加了一个执行回调函数的机制, 并且在删除属性这个方法直接调用了walkChain:
+
+```diff
++ function walkChains (key, obj, fn) {
+    const segments = key.split('.')
+    let deepObj = obj
+    while (segments.length) {
+      deepObj = deepObj[segments.shift()]
++     fn && fn()
+    }
+  }
+```
+
+```JS
+del (key, obj = this.store) {
+  walkChains(key, obj, handleDep.clear)
+  delete obj[key]
+}
+```
+
+因为handleDep.clear当成参数传递进walkChains中会**丢失this绑定**, 所以上面那段代码其实是有问题的, 不过稍作修改就好了:
+
+```diff
+  del (key, obj = this.store) {
++   walkChains(key, obj, () => handleDep.clear())
+    delete obj[key]
+  }
+```
 
 ## 后语
 
+在这篇文章中, 我们通过对defineProperty进行封装, 实现了一个简单的对象属性侦听器的功能, 以弥补小程序所没有的$watch能力. 在此基础上, 各位可以再对VX进行扩展, 更方便地去书写业务代码.
 
-## 项目地址
-
-> [Github直达](https://github.com/Lionad-Morotar/media-gear/blob/master/src/renderer/utils/suites/vx/index.js)
+完整代码[Github直达](https://github.com/Lionad-Morotar/media-gear/blob/master/src/renderer/utils/suites/vx/index.js)
