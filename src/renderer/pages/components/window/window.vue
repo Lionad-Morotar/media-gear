@@ -173,7 +173,10 @@ export default {
     setNotOverBoard (fixedX, fixedY) {
       this.$store.dispatch(
         'setMadrosWindowTopLeft',
-        this.fixXYIfOverBoard(fixedX, fixedY)
+        Object.assign(
+          { win: this.win },
+          this.fixXYIfOverBoard(fixedX, fixedY)
+        )
       )
     },
     fixXYIfOverBoard (x = 0, y = 0) {
