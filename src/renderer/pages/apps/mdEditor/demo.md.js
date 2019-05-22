@@ -1,6 +1,6 @@
 export default (`# TEditor
 
-你好, 我是使用状态机实现的超轻量Markdown预览工具, 名字叫做\`TEditor\`~
+你好, 我是仅5kb(unzip)的超轻量Markdown预览工具\`TEditor\`~
 
 ### 功能 : Header
 ##### Header 5
