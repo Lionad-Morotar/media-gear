@@ -1,5 +1,23 @@
 import Window from '../bridges/window'
 
+const ZINDEX = {
+  // 达到阈值时重拍windows的zIndex为排序后的顺序
+  // 如[1,2]经过49次ZINDEX变化后, 会成为[27,26],
+  // 如果执行RESORT_THRESHOLD, 就会将其重设其为[2,1]
+  RESORT_THRESHOLD_COUNT: 50,
+  CURRENT: 1,
+  COUNT: 0,
+  // 将所有windows的zIndex重设为由1开始
+  RESORT_THRESHOLD (windows) {
+    const winSort = windows.map(_ => _).sort((a, b) => a.zIndex - b.zIndex)
+    winSort.map((win, idx) => {
+      win.zIndex = idx + 1
+    })
+    this.CURRENT = winSort.length
+    this.COUNT = 0
+  }
+}
+
 const state = {
   windows: [],
   activeWindow: null
@@ -46,6 +64,16 @@ const mutations = {
   SET_MADROS_WINDOW_FULL_SCREEN_IN_BODY (state, { win, val }) {
     const targetWin = win || state.activeWindow
     targetWin.changeWindowVisibleState('fullScreenInBody', val)
+  },
+  INC_MADROS_WINDOW_ZINDEX (state, { win }) {
+    const targetWin = win || state.activeWindow
+
+    if (targetWin.zIndex !== ZINDEX.CURRENT) {
+      if (ZINDEX.COUNT++ > ZINDEX.RESORT_THRESHOLD_COUNT) {
+        ZINDEX.RESORT_THRESHOLD(state.windows)
+      }
+      targetWin.zIndex = ++ZINDEX.CURRENT
+    }
   }
 
 }
@@ -70,16 +98,18 @@ const actions = {
   createMadrosWindow ({ commit }, payload = { config: {} }) {
     return new Promise(resolve => {
       const { config } = payload
-      const newWin = Object.assign(new Window(), config)
+      const newWin = Object.assign(new Window({ zIndex: ZINDEX.CURRENT++ }), config)
       commit('ADD_MADROS_WINDOW', newWin)
       resolve(newWin)
     })
   },
-  delMadrosWindow ({ commit }, { window }) {
+  delMadrosWindow ({ state, commit }, { window }) {
     commit('DEL_MADROS_WINDOW', window)
+    ZINDEX.RESORT_THRESHOLD(state.windows)
   },
-  flushMadrosWindows ({commit}) {
+  flushMadrosWindows ({ state, commit }) {
     commit('FLUSH_MADROS_WINDOWS')
+    ZINDEX.RESORT_THRESHOLD(state.windows)
   },
 
   /** window property setting */
@@ -87,6 +117,7 @@ const actions = {
   setMadrosWindowTopLeft ({ commit }, { win, top, left }) {
     return new Promise((resolve, reject) => {
       if (!isNaN(top) && !isNaN(left)) {
+        commit('INC_MADROS_WINDOW_ZINDEX', { win })
         commit('SET_MADROS_WINDOW_TOP', { win, top })
         commit('SET_MADROS_WINDOW_LEFT', { win, left })
         resolve()
@@ -95,10 +126,14 @@ const actions = {
       }
     })
   },
+  setMadrosWindowFront ({ commit }, { win }) {
+    commit('INC_MADROS_WINDOW_ZINDEX', { win })
+  },
   setMadrosWindowMinimized ({ commit }, { win, val }) {
     commit('SET_MADROS_WINDOW_MINIMIZED', { win, val })
   },
   setMadrosWindowFullScreenInBody ({ commit }, { win, val }) {
+    commit('INC_MADROS_WINDOW_ZINDEX', { win })
     commit('SET_MADROS_WINDOW_FULL_SCREEN_IN_BODY', { win, val })
   }
 

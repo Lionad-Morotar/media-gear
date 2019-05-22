@@ -3,7 +3,7 @@
     <div v-show="win && render" class="window-body" :style="bodyStyles">
 
       <!-- 头部 -->
-      <header class="header fsbc fs0" @mousedown="handleDragStart">
+      <header class="header fsbc fs0" @click="setFront" @mousedown="handleDragStart">
         <div v-if="step">
           <i class="iconfont icon-double-right"></i>
           <span class="title">{{step}}</span>
@@ -68,7 +68,7 @@ export default {
   computed: {
     bodyStyles: {
       get () {
-        const stylesToMatchSideEffects = {
+        const stylesToMatchCB = {
           minimized: () => {
             this.render = false
           },
@@ -118,7 +118,8 @@ export default {
           }
         }
         console.assert(!pattern.includes(mathed), '获取窗口样式出错', mathed)
-        stylesToMatchSideEffects[mathed]()
+        stylesToMatchCB[mathed]()
+        result.zIndex = this.win.zIndex
         return result
       }
     }
@@ -143,6 +144,10 @@ export default {
     },
     toggleFullScreenInBody () {
       this.$store.dispatch('setMadrosWindowFullScreenInBody', { val: !this.win.fullScreenInBody, win: this.win })
+    },
+
+    setFront () {
+      this.$store.dispatch('setMadrosWindowFront', { win: this.win })
     },
 
     /** drag event */

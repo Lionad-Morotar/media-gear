@@ -47,7 +47,7 @@ export default {
           title: 'TEditor',
           fullbody: true,
           // fullScreenInBody: true,
-          minimized: true,
+          // minimized: true,
           top: 50
         }
       }).then(newWin => {
@@ -59,7 +59,7 @@ export default {
         config: {
           is: 'playground',
           title: 'PLAY_GROUND',
-          top: 50
+          top: 70
         }
       }).then(newWin => {
         this.$store.dispatch('activeMadrosWindow', newWin)

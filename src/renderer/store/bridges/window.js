@@ -6,7 +6,7 @@ export default class Window {
    * @param fullScreenInBody 是否在屏幕内最大化(不包含navbar和statusbar)
    * @param minimized 最小化窗口
    */
-  constructor () {
+  constructor (config) {
     this.id = utils.getRandomNumber()
 
     /** window attr */
@@ -22,6 +22,7 @@ export default class Window {
     this.left = 100
     this.width = 1000
     this.height = 700
+    this.zIndex = config.zIndex || 1
   }
   changeWindowVisibleState (name, val) {
     const handler = {
