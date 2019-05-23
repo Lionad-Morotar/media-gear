@@ -4,7 +4,7 @@
 
 /* eslint-disable */
 
-import LRU from './lru'
+import LRU from '../general/lru'
 
 /** 节点权重 */
 

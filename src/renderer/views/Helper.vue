@@ -13,6 +13,7 @@
         type="text"
         v-model="search"
         @keyup.enter="handleSearch"
+        @click.stop
       />
 
     </div>
@@ -20,7 +21,8 @@
 </template>
 
 <script>
-// TODO 搜索提示
+import installInfo from './../pages/apps/installed-info'
+
 export default {
   name: 'helper',
   computed: {
@@ -48,11 +50,26 @@ export default {
     handleSearch () {
       const search = this.search
 
-      // TODO 通过helper快速启动windows
-      // 具体的window启动可能需要做成DI的形式
       switch (search) {
         default:
-          console.log(search)
+          const apps = [...installInfo].filter(([app, val]) => app.test(search))
+
+          apps.map(([app, val], idx) => {
+            const multyWindow = val.info.multyWindow
+            const config = Object.assign(val.config, {
+              is: search,
+              title: search
+            })
+            const findExistWindow = this.$store.getters.windows.filter(win => app.test(win.is)).length
+
+            if (!findExistWindow || (findExistWindow && multyWindow)) {
+              this.$store.dispatch('createMadrosWindow', { config }).then(newWin => {
+                if (idx === apps.length - 1) {
+                  this.$store.dispatch('activeMadrosWindow', newWin)
+                }
+              })
+            }
+          })
           break
       }
     }
