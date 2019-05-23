@@ -1,5 +1,10 @@
 import utils from '@/utils'
 
+const DEFAULT_CONFIG = {
+  TOP: 0,
+  LEFT: 0
+}
+
 export default class Window {
   /**
    * @param fullbody 窗口的body部分是否有padding值
@@ -18,8 +23,8 @@ export default class Window {
 
     /** DOM val */
 
-    this.top = 100
-    this.left = 100
+    this.top = DEFAULT_CONFIG.TOP += 50
+    this.left = DEFAULT_CONFIG.LEFT += 50
     this.width = 1000
     this.height = 700
     this.zIndex = config.zIndex || 1

@@ -8,8 +8,7 @@ export default new Map([
       config: {
         title: 'TEditor',
         fullbody: true,
-        fullScreenInBody: true,
-        top: 50
+        fullScreenInBody: true
       }
     }
   ],
@@ -20,9 +19,7 @@ export default new Map([
         multyWindow: true
       },
       config: {
-        is: 'mdEditor',
-        title: 'PLAY_GROUND',
-        top: 100
+        title: 'PLAY_GROUND'
       }
     }
   ]

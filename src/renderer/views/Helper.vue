@@ -7,14 +7,22 @@
       @click="$store.dispatch('deActiveHelper')"
     >
 
-      <input
-        ref="helper-input"
-        class="helper-input"
-        type="text"
-        v-model="search"
-        @keyup.enter="handleSearch"
-        @click.stop
-      />
+      <div class="helper-content">
+        <input
+          ref="helper-input"
+          class="helper-input"
+          type="text"
+          v-model="search"
+          @input="matchSnippets"
+          @keyup.enter="handleSearch"
+          @click.stop
+        />
+        <div class="matchs-con fss-c">
+          <template v-for="match, idx in store.matchs">
+            <div class="match-item" :class="[idx === 0 && 'selected']">{{match}}</div>
+          </template>
+        </div>
+      </div>
 
     </div>
   </transition>
@@ -25,6 +33,14 @@ import installInfo from './../pages/apps/installed-info'
 
 export default {
   name: 'helper',
+  data () {
+    return {
+      store: {
+        apps: [...installInfo],
+        matchs: []
+      }
+    }
+  },
   computed: {
     active () {
       const val = this.$store.getters.helperActive
@@ -47,12 +63,19 @@ export default {
     }
   },
   methods: {
+    matchSnippets () {
+      const search = this.search
+      const apps = this.store.apps.filter(([app, val]) => search.match(app))
+
+      // console.log(apps, apps.map(([app, val]) => val.config.title))
+      this.store.matchs = apps.map(([app, val]) => val.config.title)
+    },
     handleSearch () {
       const search = this.search
 
       switch (search) {
         default:
-          const apps = [...installInfo].filter(([app, val]) => app.test(search))
+          const apps = this.store.apps.filter(([app, val]) => app.test(search))
 
           apps.map(([app, val], idx) => {
             const multyWindow = val.info.multyWindow
@@ -87,15 +110,16 @@ export default {
   background-color: rgba(0,0,0,.25);
   z-index: 999;
 }
-.helper-input {
+.helper-content {
   position: relative;
   top: -10vh;
+}
+.helper-input {
   padding: 0 .5em;
   width: 30vw;
   min-width: 400px;
   height: 60px;
   line-height: 60px;
-  border-radius: 10px;
   border: solid 1px #999;
   font-size: 30px;
   transition: border .1s;
@@ -103,6 +127,28 @@ export default {
   &:focus {
     border-color: #85b7d9;
     color: rgba(0,0,0,.8);
+  }
+}
+
+.matchs-con {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border: solid 1px #999;
+
+  .match-item {
+    padding: 0 17px;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    background-color: white;
+    color: #333;
+    font-size: 24px;
+    transition: .1s;
+
+    &.selected {
+      background-color: #f9f9f9;
+    }
   }
 }
 
