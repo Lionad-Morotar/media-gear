@@ -68,6 +68,7 @@ export default {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0,0,0,.25);
+  z-index: 999;
 }
 .helper-input {
   position: relative;
