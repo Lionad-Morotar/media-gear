@@ -130,6 +130,7 @@ const actions = {
     commit('INC_MADROS_WINDOW_ZINDEX', { win })
   },
   setMadrosWindowMinimized ({ commit }, { win, val }) {
+    !val && commit('INC_MADROS_WINDOW_ZINDEX', { win })
     commit('SET_MADROS_WINDOW_MINIMIZED', { win, val })
   },
   setMadrosWindowFullScreenInBody ({ commit }, { win, val }) {
