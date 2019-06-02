@@ -41,30 +41,30 @@ export default {
   },
   mounted () {
     if (!this.windows.find(x => x.is === 'mdEditor')) {
-      // this.$store.dispatch('createMadrosWindow', {
-      //   config: {
-      //     is: 'mdEditor',
-      //     title: 'TEditor',
-      //     fullbody: true,
-      //     // fullScreenInBody: true,
-      //     // minimized: true,
-      //     top: 50
-      //   }
-      // }).then(newWin => {
-      //   this.$store.dispatch('activeMadrosWindow', newWin)
-      // })
+      this.$store.dispatch('createMadrosWindow', {
+        config: {
+          is: 'mdEditor',
+          title: 'TEditor',
+          fullbody: true,
+          fullScreenInBody: true,
+          // minimized: true,
+          top: 50
+        }
+      }).then(newWin => {
+        this.$store.dispatch('activeMadrosWindow', newWin)
+      })
     }
-    if (!this.windows.find(x => x.is === 'playground')) {
-      // this.$store.dispatch('createMadrosWindow', {
-      //   config: {
-      //     is: 'playground',
-      //     title: 'PLAY_GROUND',
-      //     top: 70
-      //   }
-      // }).then(newWin => {
-      //   this.$store.dispatch('activeMadrosWindow', newWin)
-      // })
-    }
+    // if (!this.windows.find(x => x.is === 'playground')) {
+    //   this.$store.dispatch('createMadrosWindow', {
+    //     config: {
+    //       is: 'playground',
+    //       title: 'PLAY_GROUND',
+    //       top: 70
+    //     }
+    //   }).then(newWin => {
+    //     this.$store.dispatch('activeMadrosWindow', newWin)
+    //   })
+    // }
   }
 }
 </script>
