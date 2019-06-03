@@ -6,8 +6,6 @@
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "blog:dev": "vuepress dev res/mgear",
-    "blog:build": "vuepress build res/mgear",
     "build": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
@@ -134,7 +132,6 @@
     "vue-loader": "^15.2.4",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.16",
-    "vuepress": "^0.14.11",
     "webp-loader": "^0.4.0",
     "webpack": "^4.15.1",
     "webpack-cli": "^3.0.8",
