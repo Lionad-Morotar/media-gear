@@ -6,6 +6,8 @@
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
+    "blog:dev": "vuepress dev res/mgear",
+    "blog:build": "vuepress build res/mgear",
     "build": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
