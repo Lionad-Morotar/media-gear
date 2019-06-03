@@ -21,7 +21,7 @@ const webpackConfig = merge(baseWebpackConfig, {
 
 Webpack 使用 `MiniCssExtractPlugin` 插件, 将文件(如Vue单文件组件)中的CSS代码, 经过处理后, 分离到形如`app.hash1234.css`的单独的CSS文件:
 
-![单独的CSS文件](Vue组件样式污染及反制机制.assets/browser_fYMdZDAMsI.png)
+![单独的CSS文件](./assets/browser_fYMdZDAMsI.png)
 
 如果没有加入防止样式污染的措施的同时, 项目中存在了大量的同名ClassName, 那么可能会产生意想不到的CSS选择器权重覆盖. 这可能使后文件中某部分选择器权重更高的类影响整个应用, 而此过程通常发生在组件的编写中, 所以一般称之为组件样式污染.
 
@@ -49,7 +49,7 @@ function parse(options) {
 
 // vue.js
 function parseComponent(content, options) {
-	// ...
+    // ...
     var sfc = {
         template: null,
         script: null,
@@ -62,7 +62,8 @@ function parseComponent(content, options) {
 ```
 
 我们可以将SFC结构融合到`Webpack`进行开发的过程成中, 主要有这几点影响:
-- 允许为 Vue 组件的每个部分使用其它的 webpack loader，例如在 `<style> `的部分使用 Sass Loader , 在 `<customBlocks> `的部分使用自定义 Loader
+
+- 允许为 Vue 组件的每个部分使用其它的 webpack loader，例如在`<style>`的部分使用 Sass Loader , 在 `<customBlocks>`的部分使用自定义 Loader
 - 使用 webpack loader 将 `<style>`和 `<template>` 中引用的资源当作模块依赖来处理
 - 模拟 Scoped CSS
 - 在开发过程中使用热重载来保持状态
@@ -205,6 +206,6 @@ selectors.each((selector) => {
 
 ## 最后
 
-本人前端菜得捉急, 文中不详尽或有错的地方, 欢迎各位大佬斧正. 如果本文对你有所帮助, 那是再好不过, 看到这里都是真爱啊(笑.jpg) 劳烦`点赞 收藏 关注 三连击`!!! 
+本人前端菜得捉急, 文中不详尽或有错的地方, 欢迎各位大佬斧正. 如果本文对你有所帮助, 那是再好不过, 看到这里都是真爱啊(笑.jpg) 劳烦`点赞 收藏 关注 三连击`!!!
 
 > 为了方便理解, 或是防止陷入令人头疼的细节, 文中源码片段有部分删减
