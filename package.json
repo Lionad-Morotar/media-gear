@@ -132,6 +132,7 @@
     "vue-loader": "^15.2.4",
     "vue-style-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.16",
+    "vuepress": "^0.14.11",
     "webp-loader": "^0.4.0",
     "webpack": "^4.15.1",
     "webpack-cli": "^3.0.8",
